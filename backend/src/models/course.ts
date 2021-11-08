@@ -12,7 +12,7 @@ export type CourseDocument = Document & {
   published: boolean;
   level: CourseLevelDocument;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: number | Date;
 };
 
 const CourseSchema = new Schema<CourseDocument>(
@@ -24,8 +24,9 @@ const CourseSchema = new Schema<CourseDocument>(
     numberOfStudentsEnrolled: { type: Number, required: true, default: 0 },
     published: { type: Boolean, required: true, default: false },
     level: { type: Schema.Types.ObjectId, ref: "CourseLevel", required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
   },
-  { timestamps: true }
+  { timestamps: { createdAt: true } }
 );
 
 // Pagination
