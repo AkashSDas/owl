@@ -8,7 +8,12 @@ export type CourseChaptersDocument = Document & {
 };
 
 const CourseChaptersSchema = new Schema<CourseChaptersDocument>({
-  courseId: { type: Schema.Types.ObjectId, ref: "Course", unique: true },
+  courseId: {
+    type: Schema.Types.ObjectId,
+    ref: "Course",
+    unique: true,
+    required: true,
+  },
   chapters: {
     type: [{ type: Schema.Types.ObjectId, ref: "Chapter" }],
     default: [],
