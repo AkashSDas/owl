@@ -10,7 +10,7 @@ export type ChapterDocument = Document & {
 const ChapterSchema = new Schema<ChapterDocument>({
   lessons: {
     type: [{ type: Schema.Types.ObjectId, ref: "Lesson" }],
-    required: true,
+    default: [],
   },
   name: { type: String, required: true, trim: true },
   description: { type: String, required: true, trim: true },
