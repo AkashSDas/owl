@@ -30,7 +30,7 @@ const CourseSchema = new Schema<CourseDocument>(
 );
 
 // Pagination
-CourseSchema.plugin(MongoPaging.mongoosePlugin, { name: "paginateSchema" });
+CourseSchema.plugin(MongoPaging.mongoosePlugin, { name: "paginateCourse" });
 
 const Course = model<CourseDocument>("Course", CourseSchema);
 export default Course;
