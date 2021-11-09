@@ -1,5 +1,4 @@
-import { Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { Response } from "express";
 
 /**
  * @remarks
@@ -40,19 +39,4 @@ export function responseMsg(
 ): void {
   res.status(status).json({ error, message, data });
   next();
-}
-
-/**
- * @remarks
- * To check validations on req set by express-validator
- * If no errors then do nothing
- * If any error then send response msg telling about the error
- *
- * @returns whether there's any error or not
- */
-export function validationCheck(req: Request, res: Response): boolean {
-  const errors = validationResult(req);
-  if (errors.isEmpty()) return false;
-  responseMsg(res, { status: 422, message: errors.array()[0].msg });
-  return true;
 }
