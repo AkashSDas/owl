@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import { responseMsg } from "../utils";
+import { responseMsg } from "../../utils";
 
 /**
  * @remarks
