@@ -6,7 +6,9 @@ import * as jsonwebtoken from "jsonwebtoken";
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
   const [data, err] = await runAsync(User.findOne({ email }).exec());
-  if (err || !data) return responseMsg(res, { status: 400, message: "User does not exists" });
+  if (err)
+    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
+  else if (!data) return responseMsg(res, { status: 400, message: "User does not exists" });
 
   // Authentication
   const user: UserDocument = data;
