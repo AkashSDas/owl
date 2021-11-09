@@ -48,10 +48,11 @@ export function responseMsg(
  * If no errors then do nothing
  * If any error then send response msg telling about the error
  *
- * @returns void
+ * @returns whether there's any error or not
  */
-export function validationCheck(req: Request, res: Response): void {
+export function validationCheck(req: Request, res: Response): boolean {
   const errors = validationResult(req);
-  if (errors.isEmpty()) return null;
-  return responseMsg(res, { status: 422, message: errors.array()[0].msg });
+  if (errors.isEmpty()) return false;
+  responseMsg(res, { status: 422, message: errors.array()[0].msg });
+  return true;
 }
