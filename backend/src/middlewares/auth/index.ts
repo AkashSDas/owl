@@ -35,3 +35,13 @@ export function isTeacher(req: Request, res: Response, next: NextFunction): void
   }
   next();
 }
+
+/**
+ * Authenticate if request is sent by a 'admin'
+ */
+export function isAdmin(req: Request, res: Response, next: NextFunction): void {
+  if (req.profile.roles.filter((role) => role === "admin").length === 0) {
+    return responseMsg(res, { status: 403, message: "Access denied" });
+  }
+  next();
+}
