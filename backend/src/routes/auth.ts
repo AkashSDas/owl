@@ -8,5 +8,5 @@ import { loginValidation, signupValidation } from "../validators";
 export const router = Router();
 
 router.post("/signup", signupValidation, validationCheck, signup);
-router.post("/login", loginValidation, login);
+router.post("/login", loginValidation, validationCheck, login);
 router.get("/logout", logout);
