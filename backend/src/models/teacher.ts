@@ -1,18 +1,15 @@
 import { Document, model, Schema } from "mongoose";
 import { ExpertiseDocument } from "./expertise";
 import { QualificationDocument } from "./qualification";
-// import { UserDocument } from "./user";
+import { UserDocument } from "./user";
 import MongoPaging from "mongo-cursor-pagination";
 
 export type TeacherDocument = Document & {
-  // Is this right way? it's not giving any error while using (using string, number, etc... were giving error)
-  // userId: UserDocument;
-
-  userId: any;
+  userId: UserDocument;
   bio: string;
   yearsOfExperience: number;
-  qualifications?: QualificationDocument[];
-  expertise?: ExpertiseDocument[];
+  qualifications: QualificationDocument[];
+  expertise: ExpertiseDocument[];
 };
 
 const TeacherSchema = new Schema<TeacherDocument>(
@@ -22,9 +19,11 @@ const TeacherSchema = new Schema<TeacherDocument>(
     yearsOfExperience: { type: Number, required: true },
     qualifications: {
       type: [{ type: Schema.Types.ObjectId, ref: "Qualification" }],
+      required: true,
     },
     expertise: {
       type: [{ type: Schema.Types.ObjectId, ref: "Expertise" }],
+      required: true,
     },
   },
   { timestamps: true }
