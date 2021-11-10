@@ -9,6 +9,8 @@ export type CourseDocument = Document & {
   description: string;
   ratings: number;
   numberOfStudentsEnrolled: number;
+  courseLength: number; // course length in hours
+  numberOfLectures: number;
   published: boolean;
   level: CourseLevelDocument;
   createdAt: Date;
@@ -22,6 +24,8 @@ const CourseSchema = new Schema<CourseDocument>(
     description: { type: String, required: true, trim: true },
     ratings: { type: Number, required: true, default: 0 },
     numberOfStudentsEnrolled: { type: Number, required: true, default: 0 },
+    courseLength: { type: Number, required: true, default: 0 },
+    numberOfLectures: { type: Number, required: true, default: 0 },
     published: { type: Boolean, required: true, default: false },
     level: { type: Schema.Types.ObjectId, ref: "CourseLevel", required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
