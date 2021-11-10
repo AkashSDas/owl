@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Teacher from "../../models/teacher";
 import User, { UserDocument } from "../../models/user";
 import { responseMsg, runAsync } from "../../utils";
 
@@ -50,10 +51,31 @@ export async function becomeAdmin(req: Request, res: Response): Promise<void> {
 /**
  * Make existing User an teacher
  *
+ * @remarks
+ * Here db operations (creating teacher doc and add teacher role to user doc) both needs to be
+ * completed together or else if one fails then other one should not be executed. Now the issue
+ * it bulk write in mongodb are for same collection but here we've separate collection namely
+ * Teachers and Users. This is one flaw in this implementation
+ *
  * @todo
  * - Add something like `secret code` using which the user can become teacher and not directly
+ * - Check whether object ids in qualifications and expertise are mongo object ids
+ * - Check whether mongo object ids in qualifications and expertise exists
+ * - What to do when qualifications and expertise in teacher doc if they're deleted in their respective collections
  */
 export async function becomeTeacher(req: Request, res: Response): Promise<void> {
   const user = await checkRole(req, res, "teacher");
-  if (user) makeRole(user as unknown as UserDocument, res, "teacher");
+  if (user) {
+    // Creating teacher doc
+    const [data, err] = await runAsync(new Teacher({ userId: user._id, ...req.body }).save());
+
+    if (err || !data)
+      return responseMsg(res, {
+        status: 400,
+        message: "Something went wrong, Please try again",
+      });
+
+    // Add teacher role to user doc
+    makeRole(user as unknown as UserDocument, res, "teacher");
+  }
 }
