@@ -24,3 +24,18 @@ export const qualificationValidation = [
   check("name", "Name should be atleast 3 characters").isLength({ min: 3 }),
   check("emoji", "Emoji should be atmost 4 characters").isLength({ max: 4 }),
 ];
+
+export const teacherValidation = [
+  check("bio", "Bio required").exists(),
+  check("bio", "Bio should be atleast of 10 characters").isLength({ min: 10 }),
+  check("yearsOfExperience", "Years of experience is required").exists(),
+  check("yearsOfExperience", "Years of experience should be a positive number").isNumeric({
+    no_symbols: true,
+  }),
+  check("qualifications", "Qualifications required").exists(),
+  check("qualifications", "Qualifications format is wrong").isArray(),
+  check("qualifications", "Qualifications should've atleast one item").isArray({ min: 1 }),
+  check("expertise", "Experise required").exists(),
+  check("expertise", "Experise format is wrong").isArray(),
+  check("expertise", "Experise should've atleast one item").isArray({ min: 1 }),
+];
