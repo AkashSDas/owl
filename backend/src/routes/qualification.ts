@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createQualification } from "../controllers/qualification/create";
+import { getAllQualifications } from "../controllers/qualification/get_all";
 import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { validationCheck } from "../middlewares/express_validation";
 import { getUserById } from "../middlewares/user";
@@ -20,3 +21,4 @@ router.post(
   validationCheck,
   createQualification
 );
+router.get("/", getAllQualifications);
