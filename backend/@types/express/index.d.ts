@@ -13,6 +13,7 @@
  *     {"compilerOptions": "typeRoots": [ "@types" ] }
  */
 
+import { CourseLevelDocument } from "../../src/models/course_level";
 import { ExpertiseDocument } from "../../src/models/expertise";
 import { QualificationDocument } from "../../src/models/qualification";
 import { UserDocument } from "../../src/models/user";
@@ -23,5 +24,6 @@ declare module "express-serve-static-core" {
     auth: any;
     qualification: QualificationDocument;
     expertise: ExpertiseDocument;
+    courseLevel: CourseLevelDocument;
   }
 }
