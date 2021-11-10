@@ -13,11 +13,13 @@
  *     {"compilerOptions": "typeRoots": [ "@types" ] }
  */
 
+import { QualificationDocument } from "../../src/models/qualification";
 import { UserDocument } from "../../src/models/user";
 
 declare module "express-serve-static-core" {
   interface Request {
     profile: UserDocument;
     auth: any;
+    qualification: QualificationDocument;
   }
 }
