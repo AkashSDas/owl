@@ -14,7 +14,7 @@ export type TeacherDocument = Document & {
 
 const TeacherSchema = new Schema<TeacherDocument>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     bio: { type: String, required: true, trim: true },
     yearsOfExperience: { type: Number, required: true },
     qualifications: {
