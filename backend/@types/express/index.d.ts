@@ -13,6 +13,7 @@
  *     {"compilerOptions": "typeRoots": [ "@types" ] }
  */
 
+import { ExpertiseDocument } from "../../src/models/expertise";
 import { QualificationDocument } from "../../src/models/qualification";
 import { UserDocument } from "../../src/models/user";
 
@@ -21,5 +22,6 @@ declare module "express-serve-static-core" {
     profile: UserDocument;
     auth: any;
     qualification: QualificationDocument;
+    expertise: ExpertiseDocument;
   }
 }
