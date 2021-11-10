@@ -5,6 +5,7 @@ import { router as userRouter } from "./routes/user";
 import { router as qualificationRouter } from "./routes/qualification";
 import { router as expertiseRouter } from "./routes/expertise";
 import { router as courseLevelRouter } from "./routes/course_level";
+import { router as courseRouter } from "./routes/course";
 
 // App
 export const app = express();
@@ -22,3 +23,4 @@ app.use("/api/user", userRouter);
 app.use("/api/qualification", qualificationRouter);
 app.use("/api/expertise", expertiseRouter);
 app.use("/api/course-level", courseLevelRouter);
+app.use("/api/course", courseRouter);
