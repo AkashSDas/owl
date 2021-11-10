@@ -16,6 +16,7 @@
 import { CourseLevelDocument } from "../../src/models/course_level";
 import { ExpertiseDocument } from "../../src/models/expertise";
 import { QualificationDocument } from "../../src/models/qualification";
+import { TeacherDocument } from "../../src/models/teacher";
 import { UserDocument } from "../../src/models/user";
 
 declare module "express-serve-static-core" {
@@ -25,5 +26,6 @@ declare module "express-serve-static-core" {
     qualification: QualificationDocument;
     expertise: ExpertiseDocument;
     courseLevel: CourseLevelDocument;
+    teacher: TeacherDocument;
   }
 }
