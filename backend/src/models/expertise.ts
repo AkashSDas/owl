@@ -6,7 +6,7 @@ export type ExpertiseDocument = Document & {
 };
 
 const ExpertiseSchema = new Schema<ExpertiseDocument>({
-  name: { type: String, required: true, unqiue: true, trim: true },
+  name: { type: String, required: true, unique: true, trim: true },
   emoji: { type: String, required: true, trim: true },
 });
 
