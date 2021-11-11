@@ -41,8 +41,8 @@ export const teacherValidation = [
 ];
 
 export const courseCreateValidation = [
-  check("title", "Title is required").exists(),
-  check("title", "Title should be atleast of 6 characters").isLength({ min: 6 }),
+  check("name", "Course name is required").exists(),
+  check("name", "Course name should be atleast of 6 characters").isLength({ min: 6 }),
   check("description", "Description is required").exists(),
   check("description", "Description should be atleast of 6 characters").isLength({ min: 6 }),
   check("level", "Course level is required").exists(),
