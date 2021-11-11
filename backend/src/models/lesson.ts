@@ -5,6 +5,7 @@ export type LessonDocument = Document & {
   description: string;
   note?: string;
   videoURL?: string;
+  videoDuration?: number; // in minutes
 };
 
 const LessonSchema = new Schema<LessonDocument>({
@@ -12,6 +13,7 @@ const LessonSchema = new Schema<LessonDocument>({
   description: { type: String, required: true, trim: true },
   note: { type: String, trim: true },
   videoURL: { type: String, trim: true },
+  videoDuration: { type: Number },
 });
 
 const Lesson = model<LessonDocument>("Lesson", LessonSchema);
