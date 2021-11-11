@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { createCourse } from "../controllers/course/create";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
+import { validationCheck } from "../middlewares/express_validation";
 import { getTeacherById } from "../middlewares/teacher";
+import { courseCreateValidation } from "../validators";
 
 export const router = Router();
 
@@ -9,4 +11,12 @@ export const router = Router();
 router.param("teacherId", getTeacherById);
 
 // Routes
-router.post("/:teacherId", isLoggedIn, isAuthenticated, isTeacher, createCourse);
+router.post(
+  "/:teacherId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  courseCreateValidation,
+  validationCheck,
+  createCourse
+);
