@@ -8,6 +8,7 @@ export type CourseDocument = Document & {
   name: string;
   description: string;
   ratings: number;
+  coverImgURL: string;
   numberOfStudentsEnrolled: number;
   courseLength: number; // course length in hours
   numberOfLectures: number;
@@ -23,6 +24,11 @@ const CourseSchema = new Schema<CourseDocument>(
     name: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
     ratings: { type: Number, required: true, default: 0 },
+    coverImgURL: {
+      type: String,
+      required: true,
+      default: process.env.DEFAULT_USER_PROFILE_PIC_URL,
+    },
     numberOfStudentsEnrolled: { type: Number, required: true, default: 0 },
     courseLength: { type: Number, required: true, default: 0 },
     numberOfLectures: { type: Number, required: true, default: 0 },
