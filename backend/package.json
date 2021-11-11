@@ -33,6 +33,7 @@
     "express-validator": "^6.13.0",
     "firebase-admin": "^10.0.0",
     "formidable": "^2.0.1",
+    "get-video-duration": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongo-cursor-pagination": "^7.6.0",
