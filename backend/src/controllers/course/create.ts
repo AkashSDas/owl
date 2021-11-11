@@ -17,13 +17,13 @@ import { responseMsg, runAsync } from "../../utils";
  * name, description and level (course level) to create the course
  */
 export async function createCourse(req: Request, res: Response) {
-  const teacher = req.teacher;
+  const user = req.profile; // since teacherId === user._id
 
   // Only below values will be used to create a course
-  const { title, description, level } = req.body;
+  const { name, description, level } = req.body;
   const courseData = {
-    teacherId: teacher._id,
-    title,
+    teacherId: user._id,
+    name,
     description,
     level,
   };
