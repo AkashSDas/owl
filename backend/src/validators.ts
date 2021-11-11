@@ -39,3 +39,12 @@ export const teacherValidation = [
   check("expertise", "Experise format is wrong").isArray(),
   check("expertise", "Experise should've atleast one item").isArray({ min: 1 }),
 ];
+
+export const courseCreateValidation = [
+  check("title", "Title is required").exists(),
+  check("title", "Title should be atleast of 6 characters").isLength({ min: 6 }),
+  check("description", "Description is required").exists(),
+  check("description", "Description should be atleast of 6 characters").isLength({ min: 6 }),
+  check("level", "Course level is required").exists(),
+  check("level", "Wrong format of course level").isMongoId(),
+];
