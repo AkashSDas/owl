@@ -8,6 +8,7 @@ import { router as courseLevelRouter } from "./routes/course_level";
 import { router as courseRouter } from "./routes/course";
 import { router as courseChaptersRouter } from "./routes/course_chapters";
 import { router as chapterRouter } from "./routes/chapter";
+import { router as lessonRouter } from "./routes/lesson";
 
 // App
 export const app = express();
@@ -28,3 +29,4 @@ app.use("/api/course-level", courseLevelRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/course-chapters", courseChaptersRouter);
 app.use("/api/chapter", chapterRouter);
+app.use("/api/lesson", lessonRouter);
