@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import CourseLevel, { CourseLevelDocument } from "../../models/course_level";
-import { responseMsg, runAsync } from "../../utils";
+import CourseLevel, { CourseLevelDocument } from "../models/course_level";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Get single doc by id

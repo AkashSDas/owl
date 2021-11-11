@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Course, { CourseDocument } from "../../models/course";
-import { responseMsg, runAsync } from "../../utils";
+import Course, { CourseDocument } from "../models/course";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Get single doc by id

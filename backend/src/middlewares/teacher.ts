@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Teacher, { TeacherDocument } from "../../models/teacher";
-import { responseMsg, runAsync } from "../../utils";
+import Teacher, { TeacherDocument } from "../models/teacher";
+import { responseMsg, runAsync } from "../utils";
 
 export async function getTeacherById(
   req: Request,

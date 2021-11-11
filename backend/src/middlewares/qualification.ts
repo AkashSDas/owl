@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Qualification, { QualificationDocument } from "../../models/qualification";
-import { responseMsg, runAsync } from "../../utils";
+import Qualification, { QualificationDocument } from "../models/qualification";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Get single doc by id

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "express-jwt";
-import { responseMsg } from "../../utils";
+import { responseMsg } from "../utils";
 
 // Protect routes using this middleware
 // `auth` will be the user property

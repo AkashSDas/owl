@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import User, { UserDocument } from "../../models/user";
-import { responseMsg, runAsync } from "../../utils";
+import User, { UserDocument } from "../models/user";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Get single by id

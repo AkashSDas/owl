@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Chapter, { ChapterDocument } from "../../models/chapter";
-import { responseMsg, runAsync } from "../../utils";
+import Chapter, { ChapterDocument } from "../models/chapter";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Get single doc by id
