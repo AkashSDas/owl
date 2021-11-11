@@ -18,10 +18,16 @@ import { responseMsg, runAsync } from "../../utils";
  */
 export async function createCourse(req: Request, res: Response) {
   const teacher = req.teacher;
+
+  // Only below values will be used to create a course
+  const { title, description, level } = req.body;
   const courseData = {
     teacherId: teacher._id,
-    ...req.body,
+    title,
+    description,
+    level,
   };
+
   const [data, err] = await runAsync(new Course(courseData).save());
 
   if (err || !data)
