@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Chapter from "../../models/chapter";
-import CourseChapters from "../../models/course_chapters";
-import { responseMsg, runAsync } from "../../utils";
+import Chapter from "../models/chapter";
+import CourseChapters from "../models/course_chapters";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Create a chapter and then add it to course chapters list

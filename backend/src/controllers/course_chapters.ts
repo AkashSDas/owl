@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import CourseChapters from "../../models/course_chapters";
-import { responseMsg, runAsync } from "../../utils";
+import CourseChapters from "../models/course_chapters";
+import { responseMsg, runAsync } from "../utils";
 
 export async function createCourseChapters(req: Request, res: Response) {
   const courseId = req.course._id;

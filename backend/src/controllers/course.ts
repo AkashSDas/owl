@@ -1,9 +1,64 @@
 import { Request, Response } from "express";
+import Course from "../models/course";
+import CourseChapters from "../models/course_chapters";
+import { responseMsg, runAsync } from "../utils";
 import formidable from "formidable";
-import { responseMsg, runAsync } from "../../utils";
 import _ from "lodash";
 import { v4 } from "uuid";
-import { bucket } from "../../firebase";
+import { bucket } from "../firebase";
+
+/**
+ * Create course
+ *
+ * @remarks
+ * req.body shape will be
+ *  {
+ *      name,
+ *      description,
+ *      level
+ *  }
+ *
+ * Course will be created incrementally so therefore only using
+ * name, description and level (course level) to create the course
+ *
+ * @todo
+ * - Make creation of course and course chapters robust so that if course is created
+ * later on course chapters can be created separately
+ */
+export async function createCourse(req: Request, res: Response) {
+  const user = req.profile; // since teacherId === user._id
+
+  // Only below values will be used to create a course
+  const { name, description, level } = req.body;
+  const courseData = {
+    teacherId: user._id,
+    name,
+    description,
+    level,
+  };
+
+  const [data, err] = await runAsync(new Course(courseData).save());
+
+  if (err || !data)
+    return responseMsg(res, {
+      status: 400,
+      message: "Failed to create course",
+    });
+
+  // Create course chapters
+  const [chapters, error] = await runAsync(new CourseChapters({ courseId: data._id }).save());
+  if (error || !chapters)
+    return responseMsg(res, {
+      status: 400,
+      message: "Failed to create course",
+    });
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    message: "Course created successfully",
+  });
+}
 
 /**
  * Update course metadata that are meant to be updated by user (teacher)

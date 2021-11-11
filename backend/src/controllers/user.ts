@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Teacher from "../../models/teacher";
-import User, { UserDocument } from "../../models/user";
-import { responseMsg, runAsync } from "../../utils";
+import Teacher from "../models/teacher";
+import User, { UserDocument } from "../models/user";
+import { responseMsg, runAsync } from "../utils";
 
 /**
  * Check user's role

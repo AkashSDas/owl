@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Fields, File, Files, IncomingForm } from "formidable";
 import { v4 } from "uuid";
-import { bucket } from "../../firebase";
-import Lesson from "../../models/lesson";
-import { responseMsg, runAsync } from "../../utils";
+import { bucket } from "../firebase";
+import Lesson from "../models/lesson";
+import { responseMsg, runAsync } from "../utils";
 import { getVideoDurationInSeconds } from "get-video-duration";
 
 /**
