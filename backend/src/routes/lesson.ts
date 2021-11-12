@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { createLessonAndPushToChapter } from "../controllers/lesson/create";
+import { createLessonAndPushToChapter, updateLesson } from "../controllers/lesson";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
 import { getChapterById } from "../middlewares/chapter";
 import { getCourseById } from "../middlewares/course";
+import { getLessonById } from "../middlewares/lesson";
 import { getUserById } from "../middlewares/user";
 
 export const router = Router();
@@ -11,6 +12,7 @@ export const router = Router();
 router.param("courseId", getCourseById);
 router.param("chapterId", getChapterById);
 router.param("userId", getUserById);
+router.param("lessonId", getLessonById);
 
 // Route
 router.post(
@@ -20,3 +22,5 @@ router.post(
   isTeacher,
   createLessonAndPushToChapter
 );
+
+router.put("/:lessonId/:courseId/:userId", isLoggedIn, isAuthenticated, isTeacher, updateLesson);
