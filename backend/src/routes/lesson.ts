@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createLessonAndPushToChapter, updateLesson } from "../controllers/lesson";
+import { createLessonAndPushToChapter, deleteLesson, updateLesson } from "../controllers/lesson";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
 import { getChapterById } from "../middlewares/chapter";
 import { getCourseById } from "../middlewares/course";
@@ -24,3 +24,11 @@ router.post(
 );
 
 router.put("/:lessonId/:courseId/:userId", isLoggedIn, isAuthenticated, isTeacher, updateLesson);
+
+router.delete(
+  "/:lessonId/:chapterId/:courseId/:userId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  deleteLesson
+);

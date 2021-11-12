@@ -119,7 +119,7 @@ export async function updateLesson(req: Request, res: Response) {
         ((await getVideoDurationInSeconds(lesson.videoURL)) / 60).toFixed(2)
       );
 
-      // Delete photo
+      // Delete video
       // Note: Be careful with deleteFiles, if empty string is passed to prefix
       // then it will delete everything in the bucket
       const [, deleteErr] = await runAsync(
@@ -132,7 +132,7 @@ export async function updateLesson(req: Request, res: Response) {
       //   );
 
       if (deleteErr)
-        return responseMsg(res, { status: 400, message: "Failed to delete course video" });
+        return responseMsg(res, { status: 400, message: "Failed to delete lesson video" });
 
       // Adding the new video
       const [, e] = await runAsync(
@@ -170,4 +170,39 @@ export async function updateLesson(req: Request, res: Response) {
       data: { lesson: savedLesson },
     });
   });
+}
+
+export async function deleteLesson(req: Request, res: Response) {
+  // All the below docs are going to be updated (lesson will be deleted)
+  const lesson = req.lesson;
+  const course = req.course;
+  const chapter = req.chapter;
+
+  // Get video duration
+  const duration = lesson.videoDuration;
+
+  // Delete video
+  const [, err1] = await runAsync(bucket.deleteFiles({ prefix: `lesson-videos/${lesson._id}` }));
+  if (err1) return responseMsg(res, { status: 400, message: "Failed to delete lesson video" });
+
+  // Delete lesson doc
+  const [, err2] = await runAsync(lesson.deleteOne({ _id: lesson._id }));
+  if (err2) return responseMsg(res, { status: 400, message: "Failed to delete lesson" });
+
+  // Update chapter lessons
+  chapter.lessons = chapter.lessons.filter((lessonId) => {
+    if (lessonId.equals(lesson._id)) return true;
+    return false;
+  });
+  const [, err3] = await runAsync(chapter.save());
+  if (err3)
+    return responseMsg(res, { status: 400, message: "Failed to update chapter lessons list" });
+
+  // Update course duration
+  course.courseLength = course.courseLength - duration;
+  course.numberOfLectures = course.numberOfLectures - 1;
+  const [, err4] = await runAsync(course.save());
+  if (err4) return responseMsg(res, { status: 400, message: "Failed to update course duration" });
+
+  return responseMsg(res, { status: 200, error: false, message: "Successfully deleted lesson" });
 }
