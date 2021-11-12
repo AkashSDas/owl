@@ -191,8 +191,8 @@ export async function deleteLesson(req: Request, res: Response) {
 
   // Update chapter lessons
   chapter.lessons = chapter.lessons.filter((lessonId) => {
-    if (lessonId.equals(lesson._id)) return true;
-    return false;
+    if (lessonId.equals(lesson._id)) return false;
+    return true;
   });
   const [, err3] = await runAsync(chapter.save());
   if (err3)
