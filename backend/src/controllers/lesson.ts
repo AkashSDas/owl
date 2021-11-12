@@ -5,6 +5,7 @@ import { bucket } from "../firebase";
 import Lesson from "../models/lesson";
 import { responseMsg, runAsync } from "../utils";
 import { getVideoDurationInSeconds } from "get-video-duration";
+import _ from "lodash";
 
 /**
  * @remarks
@@ -82,6 +83,90 @@ export async function createLessonAndPushToChapter(req: Request, res: Response) 
       status: 200,
       error: false,
       message: "Successfully created lesson",
+      data: { lesson: savedLesson },
+    });
+  });
+}
+
+/**
+ * @remarks
+ * Here fields can have name, description, note (all of them being optional)
+ */
+export async function updateLesson(req: Request, res: Response) {
+  let form = new IncomingForm({ keepExtensions: true });
+
+  form.parse(req, async (err: any, fields: Fields, files: Files) => {
+    if (err) {
+      // If user is coming till here after passing all vaidators
+      // then chances are high that the problem is in file itself
+      return responseMsg(res, {
+        status: 400,
+        message: "There is some problem with the video file",
+      });
+    }
+
+    let lesson = req.lesson;
+    lesson = _.extend(lesson, fields);
+
+    const { video } = files;
+    if (video) {
+      // Updating video in firebase bucket
+
+      const filename = (video as File).originalFilename;
+      const uuid = v4();
+      const destination = `lesson-videos/${lesson._id}/${filename}`;
+      const oldVideoDuration = parseFloat(
+        ((await getVideoDurationInSeconds(lesson.videoURL)) / 60).toFixed(2)
+      );
+
+      // Delete photo
+      // Note: Be careful with deleteFiles, if empty string is passed to prefix
+      // then it will delete everything in the bucket
+      const [, deleteErr] = await runAsync(
+        bucket.deleteFiles({ prefix: `lesson-videos/${lesson._id}` })
+      );
+
+      // If there's only one file to be deleted then use the below method
+      //   const [, deleteErr] = await runAsync(
+      //     bucket.file(`lesson-videos/${lesson._id}/${filename}`).delete()
+      //   );
+
+      if (deleteErr)
+        return responseMsg(res, { status: 400, message: "Failed to delete course video" });
+
+      // Adding the new video
+      const [, e] = await runAsync(
+        bucket.upload((video as File).filepath, {
+          destination,
+          metadata: { metadata: { firebaseStorageDownloadTokens: uuid } },
+        })
+      );
+      if (e) return responseMsg(res, { status: 400, message: "Failed to upload video" });
+      const videoURL =
+        "https://firebasestorage.googleapis.com/v0/b/" +
+        bucket.name +
+        "/o/" +
+        encodeURIComponent(destination) +
+        "?alt=media&token=" +
+        uuid;
+
+      const duration = parseFloat(((await getVideoDurationInSeconds(videoURL)) / 60).toFixed(2));
+      lesson.videoURL = videoURL;
+      lesson.videoDuration = duration;
+
+      // Updating course duration
+      const course = req.course;
+      course.courseLength = course.courseLength - oldVideoDuration + duration;
+      await runAsync(course.save());
+    }
+
+    const [savedLesson, err2] = await runAsync(lesson.save());
+    if (err2) return responseMsg(res, { status: 400, message: "Failed to update course" });
+
+    return responseMsg(res, {
+      status: 200,
+      error: false,
+      message: "Sccessfully updated the course",
       data: { lesson: savedLesson },
     });
   });
