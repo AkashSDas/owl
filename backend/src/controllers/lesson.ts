@@ -16,11 +16,6 @@ import { getVideoDurationInSeconds } from "get-video-duration";
  *  note,           string (markdown) (optional)
  *  video,          file (video file)
  * }
- *
- * @todo
- * - Issue here is we can create lesson for some separate course and some separate chapter,
- * this can be solved by changing the date model (between course, course_chapters, chapter and lesson
- * to course, chapters, lesson)
  */
 export async function createLessonAndPushToChapter(req: Request, res: Response) {
   let form = new IncomingForm({ keepExtensions: true });
