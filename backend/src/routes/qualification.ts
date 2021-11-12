@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { createQualification } from "../controllers/qualification/create";
-import { deleteQualification } from "../controllers/qualification/delete";
-import { getAllQualifications } from "../controllers/qualification/get_all";
+import {
+  createQualification,
+  deleteQualification,
+  getAllQualifications,
+} from "../controllers/qualification";
 import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { validationCheck } from "../middlewares/express_validation";
 import { getQualificationById } from "../middlewares/qualification";

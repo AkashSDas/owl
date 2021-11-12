@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { login } from "../controllers/auth/login";
-import { logout } from "../controllers/auth/logout";
-import { signup } from "../controllers/auth/signup";
+import { login, signup, logout } from "../controllers/auth";
 import { validationCheck } from "../middlewares/express_validation";
 import { loginValidation, signupValidation } from "../validators";
 

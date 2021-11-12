@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourseChapters } from "../controllers/course_chapters/create";
+import { createCourseChapters } from "../controllers/course_chapters";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
 import { getCourseById } from "../middlewares/course";
 import { getUserById } from "../middlewares/user";

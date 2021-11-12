@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { becomeAdmin, becomeTeacher } from "../controllers/user/roles";
+import { becomeAdmin, becomeTeacher } from "../controllers/user";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { validationCheck } from "../middlewares/express_validation";
 import { getUserById } from "../middlewares/user";

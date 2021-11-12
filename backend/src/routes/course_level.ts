@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { createCourseLevel } from "../controllers/course_level/create";
-import { deleteCourseLevel } from "../controllers/course_level/delete";
-import { getAllCourseLevels } from "../controllers/course_level/get_all";
+import {
+  createCourseLevel,
+  deleteCourseLevel,
+  getAllCourseLevels,
+} from "../controllers/course_level";
 import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getCourseLevelById } from "../middlewares/course_level";
 import { validationCheck } from "../middlewares/express_validation";

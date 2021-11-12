@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { createCourse } from "../controllers/course/create";
-import { updateCoursePublicMetadata } from "../controllers/course/update";
+import { createCourse, updateCoursePublicMetadata } from "../controllers/course";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
 import { getCourseById } from "../middlewares/course";
 import { validationCheck } from "../middlewares/express_validation";

@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { createExpertise } from "../controllers/expertise/create";
-import { deleteExpertise } from "../controllers/expertise/delete";
-import { getAllExpertise } from "../controllers/expertise/get_all";
+import { createExpertise, getAllExpertise, deleteExpertise } from "../controllers/expertise";
 import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getExpertiseById } from "../middlewares/expertise";
 import { validationCheck } from "../middlewares/express_validation";
