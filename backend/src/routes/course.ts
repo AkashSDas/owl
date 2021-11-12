@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourse, updateCoursePublicMetadata } from "../controllers/course";
+import { createCourse, deleteCourse, updateCoursePublicMetadata } from "../controllers/course";
 import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
 import { getCourseById } from "../middlewares/course";
 import { validationCheck } from "../middlewares/express_validation";
@@ -29,3 +29,4 @@ router.put(
   isTeacher,
   updateCoursePublicMetadata
 );
+router.delete("/:courseId/:userId", isLoggedIn, isAuthenticated, isTeacher, deleteCourse);

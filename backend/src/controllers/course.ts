@@ -6,6 +6,8 @@ import formidable from "formidable";
 import _ from "lodash";
 import { v4 } from "uuid";
 import { bucket } from "../firebase";
+import Lesson from "../models/lesson";
+import Chapter from "../models/chapter";
 
 /**
  * Create course
@@ -171,5 +173,54 @@ export async function updateCoursePublicMetadata(req: Request, res: Response) {
         coverImgURL: savedCourse.coverImgURL,
       },
     });
+  });
+}
+
+/**
+ * Delete a course
+ *
+ * @remarks
+ * Deleting a course involves multiple work
+ * - Deleting course doc
+ * - Deleting courseChapters doc where courseId === course._id
+ * - Deleting all chapters in courseChapters
+ * - Deleting all lessons in above chapters
+ * - Delete video files of above lessons in firebase
+ * One good thing is that we don't have to update any metadata as they all are going to be deleted
+ */
+export async function deleteCourse(req: Request, res: Response) {
+  const course = req.course;
+
+  // Get course chapters
+  const [courseChapters, _err1] = await runAsync(
+    CourseChapters.findOne({ courseId: course._id }).populate("chapters", "lessons").exec()
+  );
+
+  // Needed to delete all chapters and lessons associated with this
+  let chapterIds = [];
+  let lessonIds = [];
+
+  // Deleting video files of all lessons
+  for (const chapter of courseChapters.chapters) {
+    chapterIds.push(chapter._id);
+
+    for (const lessonId of chapter.lessons) {
+      lessonIds.push(lessonId);
+      await runAsync(bucket.deleteFiles({ prefix: `lesson-videos/${lessonId}` }));
+    }
+  }
+
+  // Delete lessons and chapters
+  await runAsync(Chapter.deleteMany({ _id: { $in: chapterIds } }).exec());
+  await runAsync(Lesson.deleteMany({ _id: { $in: lessonIds } }).exec());
+
+  // Delete course chapters and course
+  await runAsync(CourseChapters.deleteOne({ courseId: course._id }).exec());
+  await runAsync(Course.deleteOne({ _id: course._id }).exec());
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    message: "Successfully deleted the course",
   });
 }
