@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Chapter from "../models/chapter";
 import CourseChapters from "../models/course_chapters";
+import { LessonDocument } from "../models/lesson";
 import { responseMsg, runAsync } from "../utils";
 
 /**
@@ -27,5 +28,23 @@ export async function createChapterAndPushToCourseChapters(req: Request, res: Re
     error: false,
     message: "Successfully created chapter",
     data: { chapter },
+  });
+}
+
+/**
+ * This update controller won't update lessons as they
+ * are meant to be updated when lessons are created or deleted
+ */
+export async function updateChapter(req: Request, res: Response) {
+  const chapter = req.chapter;
+  const { name, description } = req.body;
+  if (name) chapter.name = name;
+  if (description) chapter.description = description;
+  const [data, err] = await runAsync(chapter.save());
+  if (err) return responseMsg(res, { status: 400, message: "Failed to update chapter" });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    message: "Successfully updated chapter",
   });
 }
