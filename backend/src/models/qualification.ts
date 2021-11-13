@@ -1,5 +1,12 @@
 import { Document, model, Schema } from "mongoose";
 
+/**
+ * Model Purpose
+ *
+ * Currently qualifications will be created only by admin.
+ * These values will be used in teacher's qualifications list
+ */
+
 export type QualificationDocument = Document & {
   name: string;
   emoji: string;
