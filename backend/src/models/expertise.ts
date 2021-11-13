@@ -1,5 +1,12 @@
 import { Document, model, Schema } from "mongoose";
 
+/**
+ * Model Purpose
+ *
+ * Currently expertise will be created only by admin.
+ * These values will be used in teacher's expertise list
+ */
+
 export type ExpertiseDocument = Document & {
   name: string;
   emoji: string;
