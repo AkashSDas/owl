@@ -1,22 +1,35 @@
+/**
+ * base route for qualification is `/qualification`
+ */
+
 import { Router } from "express";
 import {
   createQualification,
   deleteQualification,
   getAllQualifications,
 } from "../controllers/qualification";
-import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
+import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { validationCheck } from "../middlewares/express_validation";
 import { getQualificationById } from "../middlewares/qualification";
-import { getUserById } from "../middlewares/user";
+import { getUserById, isAdmin } from "../middlewares/user";
 import { qualificationValidation } from "../validators";
 
 export const router = Router();
 
-// Params
+/**
+ * Params
+ */
 router.param("userId", getUserById);
 router.param("qualificationId", getQualificationById);
 
-// Routes
+/**
+ * Routes
+ */
+
+// Get all qualifications
+router.get("/", getAllQualifications);
+
+// Create qualification when requested by an admin
 router.post(
   "/:userId",
   isLoggedIn,
@@ -26,9 +39,10 @@ router.post(
   validationCheck,
   createQualification
 );
-router.get("/", getAllQualifications);
+
+// Delete qualification when requested by an admin
 router.delete(
-  "/:qualificationId/:userId",
+  "/:userId/:qualificationId",
   isLoggedIn,
   isAuthenticated,
   isAdmin,
