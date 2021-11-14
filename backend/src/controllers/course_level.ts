@@ -1,54 +1,69 @@
-import { Request, Response } from "express";
+/**
+ * Course level for now are meant to be created by admins only.
+ * So before performing any CUD(create, update, delete) course level
+ * opertation check whether the user is an admin or not
+ *
+ * Course level are going to be already set by admin so the teacher or anyone
+ * can directly select from the given options
+ */
+
+import { checkCourseLevelExists } from "../helpers/course_level";
 import CourseLevel from "../models/course_level";
-import { responseMsg, runAsync } from "../utils";
+import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 
-export async function createCourseLevel(req: Request, res: Response) {
-  // Checking if course level name is already used
-  const [count, error] = await runAsync(
-    CourseLevel.find({ name: req.body.name }).limit(1).count().exec()
-  );
-  if (error)
-    return responseMsg(res, {
-      status: 400,
-      message: "Something went wrong, Please try again",
-    });
-  else if (count !== 0) return responseMsg(res, { status: 400, message: "Name is already used" });
+/**
+ * Create course level
+ *
+ * @remarks
+ * Shape of req.body should be
+ * - name
+ * - emoji
+ */
+export const createCourseLevel: Controller = async (req, res) => {
+  const [count, err1] = await checkCourseLevelExists(req.body.name);
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (count !== 0) return responseMsg(res, { msg: "Name is already used" });
 
-  const [data, err] = await runAsync(new CourseLevel(req.body).save());
-
-  if (err || !data)
-    return responseMsg(res, {
-      status: 400,
-      message: "Failed to create course level",
-    });
+  // Create new doc
+  const [lvl, err2] = await runAsync(new CourseLevel(req.body).save());
+  if (err2 || !lvl) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Course level created successfully",
+    msg: "Sccuessfully created course level",
+    data: { courseLevel: lvl },
   });
-}
+};
 
-export async function deleteCourseLevel(req: Request, res: Response) {
-  const courseLevel = req.courseLevel;
-  const [, err] = await runAsync(courseLevel.deleteOne({ _id: courseLevel._id }));
-  if (err) responseMsg(res, { status: 400, message: "Failed to delete course level" });
+/**
+ * Delete course level
+ *
+ * @remarks
+ * This should be used in conjunction with getCourseLevelById middleware
+ * which will set req.expertise
+ */
+export const deleteCourseLevel: Controller = async (req, res) => {
+  const lvl = req.courseLevel;
+  const [, err] = await runAsync(lvl.deleteOne({ _id: lvl._id }));
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Successfully deleted course level",
+    msg: "Successfully deleted course level",
   });
-}
+};
 
-export async function getAllCourseLevels(_: Request, res: Response) {
-  const [data, err] = await runAsync(CourseLevel.find().exec());
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  if (!data) return responseMsg(res, { status: 400, message: "No course level available" });
-
+/**
+ * Get all course levels without pagination
+ */
+export const getAllCourseLevels: Controller = async (_, res) => {
+  const [lvls, err] = await runAsync(CourseLevel.find().exec());
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!lvls) return responseMsg(res, { msg: "No course level available" });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: `Successfully retrieved ${data.length} course levels`,
-    data: data,
+    msg: `Successfully retrieved ${lvls.length} levels`,
+    data: { courseLevels: lvls },
   });
-}
+};
