@@ -1,22 +1,35 @@
+/**
+ * base route for course level is `/course-level`
+ */
+
 import { Router } from "express";
 import {
   createCourseLevel,
   deleteCourseLevel,
   getAllCourseLevels,
 } from "../controllers/course_level";
-import { isAdmin, isAuthenticated, isLoggedIn } from "../middlewares/auth";
+import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getCourseLevelById } from "../middlewares/course_level";
 import { validationCheck } from "../middlewares/express_validation";
-import { getUserById } from "../middlewares/user";
+import { getUserById, isAdmin } from "../middlewares/user";
 import { qualificationValidation } from "../validators";
 
 export const router = Router();
 
-// Params
+/**
+ * Params
+ */
 router.param("userId", getUserById);
 router.param("courseLevelId", getCourseLevelById);
 
-// Routes
+/**
+ * Routes
+ */
+
+// Get all course levels
+router.get("/", getAllCourseLevels);
+
+// Create course level when requested by an admin
 router.post(
   "/:userId",
   isLoggedIn,
@@ -26,5 +39,12 @@ router.post(
   validationCheck,
   createCourseLevel
 );
-router.get("/", getAllCourseLevels);
-router.delete("/:courseLevelId/:userId", isLoggedIn, isAuthenticated, isAdmin, deleteCourseLevel);
+
+// Delete course level when requested by an admin
+router.delete(
+  "/:userId/:courseLevelId",
+  isLoggedIn,
+  isAuthenticated,
+  isAdmin,
+  deleteCourseLevel
+);
