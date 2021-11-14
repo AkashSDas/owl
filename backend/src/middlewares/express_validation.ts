@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import { responseMsg } from "../utils";
+import { Middleware, responseMsg } from "../utils";
 
 /**
  * @remarks
@@ -8,8 +7,8 @@ import { responseMsg } from "../utils";
  * If no errors then move to next
  * If any error then send response msg telling about the error
  */
-export function validationCheck(req: Request, res: Response, next: NextFunction): void {
+export const validationCheck: Middleware = async (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) return next();
-  return responseMsg(res, { status: 422, message: errors.array()[0].msg });
-}
+  return responseMsg(res, { status: 422, msg: errors.array()[0].msg });
+};
