@@ -1,54 +1,69 @@
-import { Request, Response } from "express";
+/**
+ * Expertise for now are meant to be created by admins only.
+ * So before performing any CUD(create, update, delete) expertise
+ * opertation check whether the user is an admin or not
+ *
+ * Expertise are going to be already set by admin so the teacher or anyone
+ * can directly select from the given options
+ */
+
+import { checkExpertiseExists } from "../helpers/expertise";
 import Expertise from "../models/expertise";
-import { responseMsg, runAsync } from "../utils";
+import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 
-export async function createExpertise(req: Request, res: Response) {
-  // Checking if doc with same name already exists
-  const [count, error] = await runAsync(
-    Expertise.find({ name: req.body.name }).limit(1).count().exec()
-  );
-  if (error)
-    return responseMsg(res, {
-      status: 400,
-      message: "Something went wrong, Please try again",
-    });
-  else if (count !== 0) return responseMsg(res, { status: 400, message: "Name is already used" });
+/**
+ * Create expertise
+ *
+ * @remarks
+ * Shape of req.body should be
+ * - name
+ * - emoji
+ */
+export const createExpertise: Controller = async (req, res) => {
+  const [count, err1] = await checkExpertiseExists(req.body.name);
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (count !== 0) return responseMsg(res, { msg: "Name is already used" });
 
-  const [data, err] = await runAsync(new Expertise(req.body).save());
-
-  if (err || !data)
-    return responseMsg(res, {
-      status: 400,
-      message: "Failed to create expertise",
-    });
+  // Create new doc
+  const [exp, err2] = await runAsync(new Expertise(req.body).save());
+  if (err2 || !exp) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Expertise created successfully",
+    msg: "Sccuessfully created expertise",
+    data: { expertise: exp },
   });
-}
+};
 
-export async function deleteExpertise(req: Request, res: Response) {
-  const expertise = req.expertise;
-  const [, err] = await runAsync(expertise.deleteOne({ _id: expertise._id }));
-  if (err) responseMsg(res, { status: 400, message: "Failed to delete expertise" });
+/**
+ * Delete expertise
+ *
+ * @remarks
+ * This should be used in conjunction with getExpertiseById middleware
+ * which will set req.expertise
+ */
+export const deleteExpertise: Controller = async (req, res) => {
+  const exp = req.expertise;
+  const [, err] = await runAsync(exp.deleteOne({ _id: exp._id }));
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Successfully deleted expertise",
+    msg: "Successfully deleted expertise",
   });
-}
+};
 
-export async function getAllExpertise(_: Request, res: Response) {
-  const [data, err] = await runAsync(Expertise.find().exec());
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  if (!data) return responseMsg(res, { status: 400, message: "No expertise available" });
-
+/**
+ * Get all expertise without pagination
+ */
+export const getAllExpertise: Controller = async (_, res) => {
+  const [exp, err] = await runAsync(Expertise.find().exec());
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!exp) return responseMsg(res, { msg: "No expertise available" });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: `Successfully retrieved ${data.length} expertise`,
-    data: data,
+    msg: `Successfully retrieved ${exp.length} expertise`,
+    data: { expertise: exp },
   });
-}
+};
