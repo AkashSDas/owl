@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 /**
  * @remarks
@@ -21,9 +21,9 @@ export async function runAsync(promise: Promise<any>): Promise<Array<any>> {
  * The response data from all routes will be of the following shape
  */
 interface ResponseMessage {
-  status: number;
+  status?: number;
   error?: boolean;
-  message: string;
+  msg: string;
   data?: any;
 }
 
@@ -34,9 +34,42 @@ interface ResponseMessage {
  */
 export function responseMsg(
   res: Response,
-  { status, error = true, message, data }: ResponseMessage,
+  { status = 400, error = true, msg, data }: ResponseMessage,
   next: Function = () => {}
 ): void {
-  res.status(status).json({ error, message, data });
+  res.status(status).json({ error, msg, data });
   next();
 }
+
+/**
+ * Base middleware type
+ */
+export type Middleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void>;
+
+/**
+ * Middlewares type for findById type of middlewares
+ */
+export type IdMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  id: string
+) => Promise<void>;
+
+/**
+ * Base controller type
+ */
+export type Controller = (req: Request, res: Response) => Promise<void>;
+
+/**
+ * Presets for response msgs
+ */
+export const responseMsgs = {
+  WENT_WRONG: "Something went wrong, Please try again",
+  NO_USER: "User doesn't exists",
+  ACCESS_DENIED: "Access denied",
+};
