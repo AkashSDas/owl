@@ -1,19 +1,55 @@
 import { Request, Response } from "express";
-import User, { UserDocument } from "../models/user";
-import { responseMsg, runAsync } from "../utils";
+import User from "../models/user";
+import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 import * as jsonwebtoken from "jsonwebtoken";
 
-export async function login(req: Request, res: Response) {
-  const { email, password } = req.body;
-  const [data, err] = await runAsync(User.findOne({ email }).exec());
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  else if (!data) return responseMsg(res, { status: 400, message: "User does not exists" });
+/**
+ * Create new user
+ *
+ * @remarks
+ * Shape of req.body will be
+ * - username
+ * - email
+ * - dateOfBirth
+ * User data is not returned after successful sign up
+ *
+ * @todo
+ * - Add some check in req.body to take only those values needed for User creation
+ */
+export const signup: Controller = async (req, res) => {
+  // Check if the user exists or not
+  const [count, err1] = await runAsync(
+    User.find({ email: req.body.email }).limit(1).count().exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (count !== 0) return responseMsg(res, { msg: "Email is already used" });
+
+  // Saving the user in the db
+  const [user, err2] = await runAsync(new User(req.body).save());
+  if (err2 || !user) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Account created successfully",
+  });
+};
+
+/**
+ * JWT login user in the backend
+ *
+ * @remarks
+ * Shape of req.body i.e. things needed for logging in the user are
+ * - email
+ * - password
+ * Before using login ctrl use checkUserExists middleware which will set req.profile
+ * if user exists else send no user response
+ */
+export const login: Controller = async (req, res) => {
+  const user = req.profile;
 
   // Authentication
-  const user: UserDocument = data;
-  if (!user.authenticate(password))
-    return responseMsg(res, { status: 401, message: "Wrong password" });
+  if (!user.authenticate(req.body.password))
+    return responseMsg(res, { status: 401, msg: "Wrong password" });
 
   // Adding auth cookie
   const token = jsonwebtoken.sign({ _id: user._id }, process.env.SECRET_KEY);
@@ -22,42 +58,19 @@ export async function login(req: Request, res: Response) {
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Successfully logged in",
-    data: {
-      token,
-      user: {
-        _id: user._id,
-        email: user.email,
-        username: user.username,
-        roles: user.roles,
-        profilePicURL: user.profilePicURL,
-        dateOfBirth: user.dateOfBirth,
-      },
-    },
+    msg: "Successfully logged in",
+    data: { token, user },
   });
-}
-
-export function logout(_: Request, res: Response) {
-  res.clearCookie("token");
-  return responseMsg(res, { status: 200, error: false, message: "User logged out" });
-}
+};
 
 /**
- * @remarks
- * Save user in the database thus signing up the  user
- *
- * @todo
- * - Add req.body check to take only those values needed for User creation
+ * Logout user in backend
  */
-export async function signup(req: Request, res: Response): Promise<void> {
-  // Checking if email is already used`
-  const [count, error] = await runAsync(
-    User.find({ email: req.body.email }).limit(1).count().exec()
-  );
-  if (error) return responseMsg(res, { status: 400, message: "Signup failed" });
-  else if (count !== 0) return responseMsg(res, { status: 400, message: "Email is already used" });
-
-  const [data, err] = await runAsync(new User(req.body).save());
-  if (err || !data) return responseMsg(res, { status: 400, message: "Signup failed" });
-  return responseMsg(res, { status: 200, error: false, message: "Account created successfully" });
-}
+export const logout = (_: Request, res: Response) => {
+  res.clearCookie("token");
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "User logged out",
+  });
+};
