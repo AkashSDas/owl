@@ -1,23 +1,17 @@
-import { NextFunction, Request, Response } from "express";
 import Lesson, { LessonDocument } from "../models/lesson";
-import { responseMsg, runAsync } from "../utils";
+import { IdMiddleware, responseMsg, responseMsgs, runAsync } from "../utils";
 
 /**
- * Get single doc by id
+ * Get lesson (if exists) and set it to req.lesson
+ *
+ * @params
+ * id: lesson mongodb id
  */
-export async function getLessonById(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  lessonId: string
-) {
-  const [data, err] = await runAsync(Lesson.findById(lessonId).exec());
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  if (!data) return responseMsg(res, { status: 400, message: "Lesson doesn't exists" });
-
+export const getLessonById: IdMiddleware = async (req, res, next, id) => {
+  const [data, err] = await runAsync(Lesson.findOne({ _id: id }).exec());
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  else if (!data) return responseMsg(res, { msg: "Lesson doesn't exists" });
   const lesson: LessonDocument = data;
   req.lesson = lesson;
-
   next();
-}
+};
