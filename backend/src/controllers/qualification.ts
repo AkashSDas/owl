@@ -1,54 +1,69 @@
-import { Request, Response } from "express";
+/**
+ * Qualification for now are meant to be created by admins only.
+ * So before performing any CUD(create, update, delete) qualification
+ * opertation check whether the user is an admin or not
+ *
+ * Qualifications are going to be already set by admin so the teacher or anyone
+ * can directly select from the given options
+ */
+
+import { checkQualificationExists } from "../helpers/qualification";
 import Qualification from "../models/qualification";
-import { responseMsg, runAsync } from "../utils";
+import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 
-export async function createQualification(req: Request, res: Response) {
-  // Checking if qualification name is already used`
-  const [count, error] = await runAsync(
-    Qualification.find({ name: req.body.name }).limit(1).count().exec()
-  );
-  if (error)
-    return responseMsg(res, {
-      status: 400,
-      message: "Something went wrong, Please try again",
-    });
-  else if (count !== 0) return responseMsg(res, { status: 400, message: "Name is already used" });
+/**
+ * Create qualification
+ *
+ * @remarks
+ * Shape of req.body should be
+ * - name
+ * - emoji
+ */
+export const createQualification: Controller = async (req, res) => {
+  const [count, err1] = await checkQualificationExists(req.body.name);
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (count !== 0) return responseMsg(res, { msg: "Name is already used" });
 
-  const [data, err] = await runAsync(new Qualification(req.body).save());
-
-  if (err || !data)
-    return responseMsg(res, {
-      status: 400,
-      message: "Failed to create qualification",
-    });
+  // Create new doc
+  const [q, err2] = await runAsync(new Qualification(req.body).save());
+  if (err2 || !q) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Qualification created successfully",
+    msg: "Sccuessfully created qualification",
+    data: { qualification: q },
   });
-}
+};
 
-export async function deleteQualification(req: Request, res: Response) {
-  const qualification = req.qualification;
-  const [, err] = await runAsync(qualification.deleteOne({ _id: qualification._id }));
-  if (err) responseMsg(res, { status: 400, message: "Failed to delete qualification" });
+/**
+ * Delete qualification
+ *
+ * @remarks
+ * This should be used in conjunction with getQualificationById middleware
+ * which will set req.qualification
+ */
+export const deleteQualification: Controller = async (req, res) => {
+  const q = req.qualification;
+  const [, err] = await runAsync(q.deleteOne({ _id: q._id }));
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: "Successfully deleted qualification",
+    msg: "Successfully deleted qualification",
   });
-}
+};
 
-export async function getAllQualifications(_: Request, res: Response) {
-  const [data, err] = await runAsync(Qualification.find().exec());
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  if (!data) return responseMsg(res, { status: 400, message: "No qualification available" });
-
+/**
+ * Get all qualifications without pagination
+ */
+export const getAllQualifications: Controller = async (_, res) => {
+  const [qs, err] = await runAsync(Qualification.find().exec());
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!qs) return responseMsg(res, { msg: "No qualification available" });
   return responseMsg(res, {
     status: 200,
     error: false,
-    message: `Successfully retrieved ${data.length} qualifications`,
-    data: data,
+    msg: `Successfully retrieved ${qs.length} qualifications`,
+    data: { qualifications: qs },
   });
-}
+};
