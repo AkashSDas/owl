@@ -1,81 +1,73 @@
-import { Request, Response } from "express";
+import { addRole, roleExists } from "../helpers/user";
 import Teacher from "../models/teacher";
-import User, { UserDocument } from "../models/user";
-import { responseMsg, runAsync } from "../utils";
+import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 
 /**
- * Check user's role
- */
-async function checkRole(req: Request, res: Response, role: string): Promise<void | UserDocument> {
-  const user = req.profile;
-  const [data, err] = await runAsync(User.findOne({ _id: user._id }).exec());
-
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  else {
-    const userDoc: UserDocument = data;
-    if (user.roles.filter((r: string) => r === role).length > 0)
-      return responseMsg(res, { status: 200, error: false, message: `You're already a ${role}` });
-    else return userDoc;
-  }
-}
-
-/**
- * Give user role
- */
-async function makeRole(user: UserDocument, res: Response, role: string): Promise<void> {
-  user.roles.push(role);
-  const [, err] = await runAsync(user.save());
-
-  if (err)
-    return responseMsg(res, { status: 400, message: "Something went wrong, Please try again" });
-  else
-    return responseMsg(res, {
-      status: 200,
-      error: false,
-      message: `The account now has ${role} privileges`,
-    });
-}
-
-/**
- * Make existing User an admin
+ * Make user an admin
  *
  * @todo
  * - Add something like `secret code` using which the user can become admin and not directly
  */
-export async function becomeAdmin(req: Request, res: Response): Promise<void> {
-  const user = await checkRole(req, res, "admin");
-  if (user) makeRole(user as unknown as UserDocument, res, "admin");
-}
+export const becomeAdmin: Controller = async (req, res) => {
+  const exists = roleExists(req, "admin");
+  if (exists)
+    return responseMsg(res, {
+      status: 200,
+      error: false,
+      msg: "You're already an admin",
+    });
+
+  // Make user an admin
+  const isSuccess = await addRole(req, "admin");
+  if (!isSuccess) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "You're now an admin",
+  });
+};
 
 /**
- * Make existing User an teacher
+ * Add teacher role to user's roles and create teacher doc for this user
  *
  * @remarks
- * Here db operations (creating teacher doc and add teacher role to user doc) both needs to be
- * completed together or else if one fails then other one should not be executed. Now the issue
- * it bulk write in mongodb are for same collection but here we've separate collection namely
- * Teachers and Users. This is one flaw in this implementation
+ *
+ * The operation of adding teacher role to user's role and creating teacher doc for
+ * the user are separate and ideally if one fails and the other one should also fail
+ * but currently there is option for bulk write across multiple collections in mongoDB.
+ * So this is **current issue in this controller**
+ *
+ * The shape of req.body will be
+ * - bio
+ * - yearsOfExperience
+ * - qualifications - List of mongoIDs of qualification
+ * - expertise - List of mongoIDs of expertise
  *
  * @todo
- * - Add something like `secret code` using which the user can become teacher and not directly
- * - Check whether object ids in qualifications and expertise are mongo object ids
- * - Check whether mongo object ids in qualifications and expertise exists
- * - What to do when qualifications and expertise in teacher doc if they're deleted in their respective collections
+ * - Add something like `secret code` using which the user can become admin and not directly
  */
-export async function becomeTeacher(req: Request, res: Response): Promise<void> {
-  const user = await checkRole(req, res, "teacher");
-  if (user) {
-    // Creating teacher doc
-    const [data, err] = await runAsync(new Teacher({ userId: user._id, ...req.body }).save());
+export const becomeTeacher: Controller = async (req, res) => {
+  const exists = roleExists(req, "teacher");
+  if (exists)
+    return responseMsg(res, {
+      status: 200,
+      error: false,
+      msg: "You're already a teacher",
+    });
 
-    if (err || !data)
-      return responseMsg(res, {
-        status: 400,
-        message: "Something went wrong, Please try again",
-      });
+  // Make user a teacher
+  const isSuccess = await addRole(req, "teacher");
+  if (!isSuccess) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
 
-    // Add teacher role to user doc
-    makeRole(user as unknown as UserDocument, res, "teacher");
-  }
-}
+  // Create teacher doc
+  const [teacher, err] = await runAsync(
+    new Teacher({ userId: req.profile._id, ...req.body }).save()
+  );
+  if (err || !teacher) responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "You're now a teacher",
+  });
+};
