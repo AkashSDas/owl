@@ -1,3 +1,7 @@
+/**
+ * base route for user is `/user`
+ */
+
 import { Router } from "express";
 import { becomeAdmin, becomeTeacher } from "../controllers/user";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
@@ -7,13 +11,21 @@ import { teacherValidation } from "../validators";
 
 export const router = Router();
 
-// Params
+/**
+ * Params
+ */
 router.param("userId", getUserById);
 
-// Roles
-router.get("/:userId/roles/create-admin", isLoggedIn, isAuthenticated, becomeAdmin);
+/**
+ * Routes
+ */
+
+// Become admin
+router.post("/:userId/roles/admin", isLoggedIn, isAuthenticated, becomeAdmin);
+
+// Become teacher
 router.post(
-  "/:userId/roles/create-teacher",
+  "/:userId/roles/teacher",
   isLoggedIn,
   isAuthenticated,
   teacherValidation,
