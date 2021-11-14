@@ -1,18 +1,32 @@
+/**
+ * base router for this is `/course`
+ */
+
 import { Router } from "express";
-import { createCourse, deleteCourse, updateCoursePublicMetadata } from "../controllers/course";
-import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
+import {
+  createCourse,
+  deleteCourse,
+  updateCoursePublicData,
+} from "../controllers/course";
+import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getCourseById } from "../middlewares/course";
 import { validationCheck } from "../middlewares/express_validation";
-import { getUserById } from "../middlewares/user";
+import { getUserById, isTeacher } from "../middlewares/user";
 import { courseCreateValidation } from "../validators";
 
 export const router = Router();
 
-// Params
+/**
+ * Params
+ */
 router.param("userId", getUserById);
 router.param("courseId", getCourseById);
 
-// Routes
+/**
+ * Routes
+ */
+
+// Create course when requested by a teacher
 router.post(
   "/:userId",
   isLoggedIn,
@@ -22,11 +36,21 @@ router.post(
   validationCheck,
   createCourse
 );
+
+// Update a course when requested by a teacher
 router.put(
-  "/:courseId/:userId",
+  "/:userId/:courseId",
   isLoggedIn,
   isAuthenticated,
   isTeacher,
-  updateCoursePublicMetadata
+  updateCoursePublicData
 );
-router.delete("/:courseId/:userId", isLoggedIn, isAuthenticated, isTeacher, deleteCourse);
+
+// Delete course when requested by a teacher
+router.delete(
+  "/:userId/:courseId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  deleteCourse
+);
