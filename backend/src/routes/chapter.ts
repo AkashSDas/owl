@@ -1,32 +1,55 @@
+/**
+ * base route for this is `/chapter`
+ */
+
 import { Router } from "express";
 import {
-  createChapterAndPushToCourseChapters,
-  deleteChapter,
+  createChapter,
   updateChapter,
+  deleteChapter,
 } from "../controllers/chapter";
-import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
-import { getCourseChaptersByCourseId } from "../middlewares/course_chapters";
-import { getUserById } from "../middlewares/user";
+import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
+import { getUserById, isTeacher } from "../middlewares/user";
 import { getChapterById } from "../middlewares/chapter";
+import { createChapterValidation } from "../validators";
+import { validationCheck } from "../middlewares/express_validation";
 
 export const router = Router();
 
-// Param
+/**
+ * Params
+ */
 router.param("userId", getUserById);
-router.param("courseId", getCourseChaptersByCourseId);
 router.param("chapterId", getChapterById);
 
-// Route
+/**
+ * Routes
+ */
+
+// Create a chapter if requested by a teacher
 router.post(
-  "/:courseId/:userId",
+  "/:userId/:courseId",
   isLoggedIn,
   isAuthenticated,
   isTeacher,
-  createChapterAndPushToCourseChapters
+  createChapterValidation,
+  validationCheck,
+  createChapter
 );
-router.put("/:chapterId/:userId", isLoggedIn, isAuthenticated, isTeacher, updateChapter);
+
+// Update the given chapter if requested by a teacher
+// TODO: add some validation checks for updating chapter
+router.put(
+  "/:userId/:courseId/:chapterId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  updateChapter
+);
+
+// Delete chapter if requested by a teacher
 router.delete(
-  "/:chapterId/:courseId/:userId",
+  "/:userId/:courseId/:chapterId",
   isLoggedIn,
   isAuthenticated,
   isTeacher,
