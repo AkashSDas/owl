@@ -1,32 +1,52 @@
+/**
+ * base route for this is `/lesson`
+ */
+
 import { Router } from "express";
-import { createLessonAndPushToChapter, deleteLesson, updateLesson } from "../controllers/lesson";
-import { isAuthenticated, isLoggedIn, isTeacher } from "../middlewares/auth";
-import { getChapterById } from "../middlewares/chapter";
-import { getCourseById } from "../middlewares/course";
+import {
+  createLesson,
+  deleteLesson,
+  updateLesson,
+} from "../controllers/lesson";
+import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getLessonById } from "../middlewares/lesson";
-import { getUserById } from "../middlewares/user";
+import { getUserById, isTeacher } from "../middlewares/user";
 
 export const router = Router();
 
-// Param
-router.param("courseId", getCourseById);
-router.param("chapterId", getChapterById);
+/**
+ * Params
+ */
 router.param("userId", getUserById);
 router.param("lessonId", getLessonById);
 
-// Route
+/**
+ * Routes
+ */
+
+// Create lesson if requested by a teacher
+// TODO: add some validation checks on req.body
 router.post(
-  "/:courseId/:chapterId/:userId",
+  "/:userId/:courseId/:chapterId",
   isLoggedIn,
   isAuthenticated,
   isTeacher,
-  createLessonAndPushToChapter
+  createLesson
 );
 
-router.put("/:lessonId/:courseId/:userId", isLoggedIn, isAuthenticated, isTeacher, updateLesson);
+// Update lesson if requested by a teacher
+// TODO: add some validation checks on req.body
+router.put(
+  "/:userId/:courseId/:chapterId/:lessonId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  updateLesson
+);
 
+// Delete a lesson if requested by a teacher
 router.delete(
-  "/:lessonId/:chapterId/:courseId/:userId",
+  "/:userId/:courseId/:chapterId/:lessonId",
   isLoggedIn,
   isAuthenticated,
   isTeacher,
