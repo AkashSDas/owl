@@ -1,4 +1,5 @@
 import { Request } from "express";
+import User from "../models/user";
 import { runAsync } from "../utils";
 
 /**
@@ -16,8 +17,12 @@ export const roleExists = (req: Request, role: string): boolean => {
  */
 export const addRole = async (req: Request, role: string) => {
   const user = req.profile;
-  user.roles.push(role);
-  const [, err] = await runAsync(user.save());
+  const [, err] = await runAsync(
+    User.updateOne(
+      { _id: user._id },
+      { $set: { roles: [...user.roles, role] } }
+    ).exec()
+  );
   if (err) return false;
   return true;
 };
