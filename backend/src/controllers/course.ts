@@ -28,7 +28,7 @@ import { deleteFileInFirebaseStorage } from "../firebase";
  */
 export const createCourse: Controller = async (req, res) => {
   const [course, err] = await runAsync(
-    new Course({ teacherId: req.teacher._id, ...req.body }).save()
+    new Course({ teacherId: req.profile._id, ...req.body }).save()
   );
   if (err || !course) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
