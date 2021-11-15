@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../models/user";
+import User, { UserDocument } from "../models/user";
 import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 import * as jsonwebtoken from "jsonwebtoken";
 
@@ -11,6 +11,7 @@ import * as jsonwebtoken from "jsonwebtoken";
  * - username
  * - email
  * - dateOfBirth
+ * - password
  * User data is not returned after successful sign up
  *
  * @todo
@@ -38,14 +39,20 @@ export const signup: Controller = async (req, res) => {
  * JWT login user in the backend
  *
  * @remarks
+ *
  * Shape of req.body i.e. things needed for logging in the user are
  * - email
  * - password
- * Before using login ctrl use checkUserExists middleware which will set req.profile
- * if user exists else send no user response
  */
 export const login: Controller = async (req, res) => {
-  const user = req.profile;
+  // Check whether the user exists
+  const [data, err] = await runAsync(
+    User.findOne({ email: req.body.email }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  else if (!data) return responseMsg(res, { msg: responseMsgs.NO_USER });
+  const user: UserDocument = data;
 
   // Authentication
   if (!user.authenticate(req.body.password))
