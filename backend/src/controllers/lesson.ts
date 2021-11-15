@@ -73,8 +73,8 @@ export const deleteLesson: Controller = async (req, res) => {
   if (!wasDeleted) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
 
   // Delete the doc
-  const [, err] = await runAsync(lesson.deleteOne({ _id: lesson._id }).exec());
-  if (!err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  const [, err] = await runAsync(lesson.deleteOne({ _id: lesson._id }));
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
