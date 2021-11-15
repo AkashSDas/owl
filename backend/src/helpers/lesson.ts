@@ -28,7 +28,11 @@ export const lessonCreateFormCallback = async (
   if (!fields.name || !fields.description || !video)
     return responseMsg(res, { msg: "Include all fields" });
 
-  const lesson = new Lesson(fields);
+  const lesson = new Lesson({
+    courseId: req.params.courseId,
+    chapterId: req.params.chapterId,
+    ...fields,
+  });
 
   // Saving the video
   // Keeping destination name like this so that in deletion of chapter and course becomes easy
