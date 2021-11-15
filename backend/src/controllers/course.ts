@@ -91,6 +91,11 @@ export const updateCoursePublicData: Controller = async (req, res) => {
 export const deleteCourse: Controller = async (req, res) => {
   const course = req.course;
 
+  // Delete course cover img
+  const path = `course-cover-imgs/${course._id}`;
+  const isDeleted = await deleteFileInFirebaseStorage(path);
+  if (!isDeleted) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
   // Delete all videos of lessons in this course
   const destination = `lesson-videos/${course._id}`;
   const wasDeleted = await deleteFileInFirebaseStorage(destination);
