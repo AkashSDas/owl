@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { createFeedback, updateFeedback } from "../controllers/feedback";
+import {
+  createFeedback,
+  deleteFeedback,
+  updateFeedback,
+} from "../controllers/feedback";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getFeedbackById } from "../middlewares/feedback";
 import { validationCheck } from "../middlewares/express_validation";
@@ -28,3 +32,11 @@ router.post(
 
 // Update feedback
 router.put("/:userId/:feedbackId", isLoggedIn, isAuthenticated, updateFeedback);
+
+// Delete feedback
+router.delete(
+  "/:userId/:feedbackId",
+  isLoggedIn,
+  isAuthenticated,
+  deleteFeedback
+);

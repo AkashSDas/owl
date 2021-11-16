@@ -110,3 +110,36 @@ export const updateFeedback: Controller = async (req, res) => {
     msg: "Feedback updated",
   });
 };
+
+/**
+ * Delete feedback
+ *
+ * @remarks
+ *
+ * The req.params should have
+ * - userId
+ *
+ * Use this in conjunction with
+ * - getFeedbackById since it will set req.feedback
+ *
+ * @todo
+ * - Check whether the user in userId exists or not
+ */
+export const deleteFeedback: Controller = async (req, res) => {
+  const feedback = req.feedback;
+  const userId = req.params.userId;
+
+  // Check whether the user is updating their feedback
+  if (feedback.userId !== (userId as any))
+    return responseMsg(res, { status: 401, msg: responseMsgs.ACCESS_DENIED });
+
+  const [, err] = await runAsync(
+    Feedback.deleteOne({ _id: feedback._id }).exec()
+  );
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Feedback deleted",
+  });
+};
