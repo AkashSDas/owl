@@ -95,3 +95,12 @@ export const createChapterValidation = [
     min: 6,
   }),
 ];
+
+export const purchaseCourseValidation = [
+  check("amount", "Amount of purchase is required").exists(),
+  check("amount", "Amount of purchase should be positive").isNumeric({
+    no_symbols: true,
+  }),
+  check("payment_method", "Payment method for purchase is required").exists(),
+  check("payment_method", "Wrong payment method format").isString(),
+];
