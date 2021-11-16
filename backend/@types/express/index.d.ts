@@ -17,6 +17,7 @@ import { ChapterDocument } from "../../src/models/chapter";
 import { CourseDocument } from "../../src/models/course";
 import { CourseLevelDocument } from "../../src/models/course_level";
 import { ExpertiseDocument } from "../../src/models/expertise";
+import { FeedbackDocument } from "../../src/models/feedback";
 import { LessonDocument } from "../../src/models/lesson";
 import { QualificationDocument } from "../../src/models/qualification";
 import { TeacherDocument } from "../../src/models/teacher";
@@ -33,5 +34,6 @@ declare module "express-serve-static-core" {
     course: CourseDocument;
     chapter: ChapterDocument;
     lesson: LessonDocument;
+    feedback: FeedbackDocument;
   }
 }
