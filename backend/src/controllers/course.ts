@@ -123,3 +123,49 @@ export const deleteCourse: Controller = async (req, res) => {
     msg: "Successfully delete the course",
   });
 };
+
+/**
+ * Publish a course
+ *
+ * @remarks
+ * To publish a course, it should've atleast 1 chapter with 1 lesson
+ */
+export const publishCourse: Controller = async (req, res) => {
+  const courseId = req.params.courseId;
+
+  // Check if the course has at least one chapter
+  const [chapterCount, err1] = await runAsync(
+    Chapter.find({ courseId: courseId as any })
+      .limit(1)
+      .count()
+      .exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (chapterCount === 0)
+    return responseMsg(res, { msg: "Course should've atleast one chapter" });
+
+  // Check if the course has at least one lesson
+  const [lessonCount, err2] = await runAsync(
+    Lesson.find({ courseId: courseId as any })
+      .limit(1)
+      .count()
+      .exec()
+  );
+  if (err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (lessonCount === 0)
+    return responseMsg(res, { msg: "Course should've atleast one lesson" });
+
+  // Publish the course
+  const [, err3] = await runAsync(
+    Course.updateOne(
+      { _id: courseId as any },
+      { $set: { published: true } }
+    ).exec()
+  );
+  if (err3) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully published the course",
+  });
+};

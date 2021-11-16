@@ -6,6 +6,7 @@ import { Router } from "express";
 import {
   createCourse,
   deleteCourse,
+  publishCourse,
   updateCoursePublicData,
 } from "../controllers/course";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
@@ -53,4 +54,13 @@ router.delete(
   isAuthenticated,
   isTeacher,
   deleteCourse
+);
+
+// Publish the course when requested by a teacher
+router.post(
+  "/:userId/:courseId",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  publishCourse
 );
