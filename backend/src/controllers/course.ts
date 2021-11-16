@@ -5,6 +5,9 @@ import { courseUpdateFormCallback } from "../helpers/course";
 import Chapter from "../models/chapter";
 import Lesson from "../models/lesson";
 import { deleteFileInFirebaseStorage } from "../firebase";
+import { getOrCreateUserPurchaseDoc } from "../helpers/user_purchase";
+import { createPaymentIntentAndCharge } from "../payments/payment";
+import UserPurchase from "../models/user_purchase";
 
 /**
  * Create course
@@ -167,5 +170,57 @@ export const publishCourse: Controller = async (req, res) => {
     status: 200,
     error: false,
     msg: "Successfully published the course",
+  });
+};
+
+/**
+ * Purchase a course
+ *
+ * @remarks
+ *
+ * The shape of req.body
+ * - amount
+ * - payment_method
+ *
+ * The req.params should've
+ * - userId
+ * - courseId
+ *
+ * @todo
+ * - Check whether the course in req.params.courseId exists or not
+ * - Check whether the user in req.params.userId exists or not
+ */
+export const purchaseCourse: Controller = async (req, res) => {
+  const userId = req.params.userId;
+  const courseId = req.params.courseId;
+
+  const userPurchase = await getOrCreateUserPurchaseDoc(userId);
+  if (!userPurchase) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  // Checking whether the user have purchased the course or not
+  if (userPurchase.courses.filter((id) => id === (courseId as any)).length > 0)
+    return responseMsg(res, { msg: "You've already purchased the course" });
+
+  // Charge for course
+  const { amount, payment_method } = req.body;
+  const paymentIntent = await createPaymentIntentAndCharge(
+    userId,
+    amount,
+    payment_method
+  );
+  if (!paymentIntent) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  // Add course to user's purchased courses
+  const [, err] = await runAsync(
+    UserPurchase.updateOne(
+      { _id: userPurchase._id },
+      { $push: { courses: courseId as any } }
+    ).exec()
+  );
+  if (!err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully purchased the course",
   });
 };

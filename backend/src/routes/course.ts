@@ -7,13 +7,17 @@ import {
   createCourse,
   deleteCourse,
   publishCourse,
+  purchaseCourse,
   updateCoursePublicData,
 } from "../controllers/course";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getCourseById } from "../middlewares/course";
 import { validationCheck } from "../middlewares/express_validation";
 import { getUserById, isTeacher } from "../middlewares/user";
-import { courseCreateValidation } from "../validators";
+import {
+  courseCreateValidation,
+  purchaseCourseValidation,
+} from "../validators";
 
 export const router = Router();
 
@@ -63,4 +67,14 @@ router.post(
   isAuthenticated,
   isTeacher,
   publishCourse
+);
+
+// Purchase a course
+router.post(
+  "/:userId/:courseId",
+  isLoggedIn,
+  isAuthenticated,
+  purchaseCourseValidation,
+  validationCheck,
+  purchaseCourse
 );
