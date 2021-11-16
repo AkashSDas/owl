@@ -104,3 +104,15 @@ export const purchaseCourseValidation = [
   check("payment_method", "Payment method for purchase is required").exists(),
   check("payment_method", "Wrong payment method format").isString(),
 ];
+
+export const feedbackCreateValidation = [
+  check("rating", "Rating is required").exists(),
+  check("rating", "Rating should be between 0 and 5").isInt({
+    min: 0,
+    max: 5,
+  }),
+  check("comment", "Comment is required").exists(),
+  check("comment", "Comment should be less than 1024 characters").isLength({
+    max: 1024,
+  }),
+];
