@@ -16,7 +16,7 @@ import UserPurchase from "../models/user_purchase";
  *
  * Shape of req.body will be
  * - name
- * - description
+ * - description - (this will be markdown)
  * - level - This is course level (mongoId)
  * - price
  *
