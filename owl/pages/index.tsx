@@ -109,12 +109,16 @@ const EmojiDarkCard = ({
 }) => {
   return (
     <div
-      style={{ boxShadow: "0px 8px  16px rgba(0, 0, 0, 0.10)" }}
+      style={{ boxShadow: "0px 8px  16px rgba(0, 0, 0, 0.25)" }}
       className={`absolute ${position} bg-grey4 text-grey0 rounded-full p-4 font-medium text-desktop-body-main opacity-60`}
     >
       {text}
     </div>
   );
 };
+
+/**
+ * Section 3
+ */
 
 export default Index;
