@@ -3,4 +3,24 @@
 @tailwind utilities;
 
 // Global font files
+@import "./scss/global/base.scss";
 @import "./scss/global/fonts.scss";
+
+@layer base {
+  // Heading font style
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-grey4;
+    font-family: "GTWalsheim Pro";
+    font-weight: 900;
+  }
+
+  body {
+    font-family: "Sofia Pro";
+    font-weight: 400;
+  }
+}
