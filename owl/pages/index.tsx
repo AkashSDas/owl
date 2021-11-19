@@ -19,10 +19,7 @@ const Index = () => {
 
 const HeroSection = () => {
   return (
-    <section
-      style={{ height: "350px" }}
-      className="w-full relative my-16 h-screen"
-    >
+    <section style={{ height: "350px" }} className="w-full relative my-16">
       <TagLineText />
       <EmojiCard text="⏰ Learn at your own pace" position="top-0 left-8" />
       <EmojiCard text="🚀 Learn whereever you want" position="top-0 right-8" />
