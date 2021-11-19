@@ -20,17 +20,27 @@ const Index = () => {
 
 const HeroSection = () => {
   return (
-    <section className="w-full relative my-16">
+    <section style={{ height: "85vh" }} className="w-full relative">
       <TagLineText />
-      <EmojiCard text="⏰ Learn at your own pace" position="top-0 left-8" />
-      <EmojiCard text="🚀 Learn whereever you want" position="top-0 right-8" />
+      <EmojiCard
+        text="⏰ Learn at your own pace"
+        position="top-8 left-8"
+        angle={-6}
+      />
+      <EmojiCard
+        text="🚀 Learn whereever you want"
+        position="top-8 right-8"
+        angle={6}
+      />
       <EmojiCard
         text="😎 Create your own learning path"
-        position="bottom-0 left-8"
+        position="bottom-8 left-8"
+        angle={6}
       />
       <EmojiCard
         text="💪 Learn how much you want"
-        position="bottom-0 right-8"
+        position="bottom-8 right-8"
+        angle={-6}
       />
     </section>
   );
@@ -39,7 +49,7 @@ const HeroSection = () => {
 const TagLineText = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center space-y-8">
-      <h1 className="mt-10 text-desktop-h1 z-10 flex flex-col justify-center items-center">
+      <h1 className="mt-24 text-desktop-h1 z-10 flex flex-col justify-center items-center">
         <div>
           Learn like a <span className="text-purple">Pro</span>
         </div>
@@ -55,14 +65,19 @@ const EmojiCard = ({
   text,
   position,
   opacity = "opacity-60",
+  angle = 0,
 }: {
   text: string;
   position: string;
   opacity?: string;
+  angle?: number;
 }) => {
   return (
     <div
-      style={{ boxShadow: "0px 8px  16px rgba(0, 0, 0, 0.10)" }}
+      style={{
+        boxShadow: "0px 8px  16px rgba(0, 0, 0, 0.10)",
+        transform: `rotate(${angle}deg)`,
+      }}
       className={`absolute ${position} bg-grey0 rounded-full p-6 font-medium text-desktop-body-main ${opacity}`}
     >
       {text}
@@ -112,7 +127,7 @@ const ExploreSection = () => {
 const EmojiDarkCard = ({
   text,
   position,
-  opacity = "opcaity-60",
+  opacity = "opacity-60",
 }: {
   text: string;
   position: string;
@@ -173,14 +188,11 @@ const TeacherSection = () => {
         style={{ lineHeight: "135%" }}
         className="flex flex-col justify-center items-center absolute -bottom-6 left-0 right-0 text-desktop-h3 font-medium text-grey4"
       >
-        <span>Learn from the people who leading the </span>
-        <span>
-          industry, who are creating new things,
-          <span className="text-grey5 font-bold italic"> people </span>
-        </span>
+        <span>Learn from the people who are leading </span>
+        <span>the industry, who are creating new things,</span>
         <span className="mb-6">
           <span className="text-grey5 font-bold italic">
-            who teach the best
+            people who teach the best
           </span>
         </span>
       </div>
