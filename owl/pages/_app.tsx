@@ -1,4 +1,5 @@
 import { IconlyProvider } from "react-iconly";
+import { Navbar } from "../components/navbar";
 import "../styles/globals.scss";
 
 /**
@@ -13,6 +14,7 @@ const MyApp = ({ Component, pageProps }) => {
       size="medium"
       primaryColor="hsla(0, 0%, 0%, 0.5)"
     >
+      <Navbar />
       <Component {...pageProps} />
     </IconlyProvider>
   );
