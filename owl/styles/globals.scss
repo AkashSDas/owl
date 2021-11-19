@@ -18,9 +18,14 @@
     font-family: "GTWalsheim Pro";
     font-weight: 900;
   }
+}
 
-  body {
-    font-family: "Sofia Pro";
-    font-weight: 400;
-  }
+body {
+  font-family: "Sofia Pro";
+  font-weight: 400;
+}
+
+button:hover {
+  filter: brightness(0.9);
+  transition: brightness 200ms ease-in-out;
 }
