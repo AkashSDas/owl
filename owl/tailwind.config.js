@@ -14,6 +14,7 @@ module.exports = {
       grey2: "hsla(0, 0%, 0%, 0.2)",
       grey3: "hsla(0, 0%, 0%, 0.6)",
       grey4: "hsla(0, 0%, 19%, 1)",
+      grey5: "hsla(0, 0%, 0%, 1)",
       error: "hsla(360, 100%, 59%, 1)",
       success: "hsla(104, 66%, 65%, 1)",
       purple: {
