@@ -42,14 +42,12 @@ export const SkewScrollingAnimation = ({
   const skewScrolling = () => {
     config.current = window.scrollY;
     config.previous += (config.current - config.previous) * config.ease;
-    const value = Math.round(config.previous * 100) / 100;
-    config.rounded = size.height < value ? size.height : value;
-    // config.rounded = Math.round(config.previous * 100) / 100;
+    config.rounded = Math.round(config.previous * 100) / 100;
 
     const difference = config.current - config.rounded;
     const acceleration = difference / size.width;
     const velocity = +acceleration;
-    const skew = velocity * 8;
+    const skew = velocity * 7.5;
 
     if (ref.current) {
       const node = ref.current as HTMLElement;
