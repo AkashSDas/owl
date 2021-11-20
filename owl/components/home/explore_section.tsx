@@ -2,7 +2,7 @@ import { PrimaryButton } from "../common/buttons";
 
 export const ExploreSection = () => {
   return (
-    <section className="w-full relative h-screen bg-grey5 py-8">
+    <section className="w-full relative h-screen bg-grey5 py-8 cursor-white">
       <h1 className="text-grey0 text-desktop-h1 w-full text-center">
         <span className="text-purple">Explore</span> your curiosity
       </h1>
