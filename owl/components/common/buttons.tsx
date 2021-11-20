@@ -1,4 +1,4 @@
-import btnStyles from "../styles/scss/components/Buttons.module.scss";
+import styles from "../../styles/components/common/Buttons.module.scss";
 
 /**
  * Regular btn
@@ -6,7 +6,7 @@ import btnStyles from "../styles/scss/components/Buttons.module.scss";
  */
 export const RegularButton = ({ text, onClick }) => {
   return (
-    <button className={btnStyles["regular-btn"]} onClick={onClick}>
+    <button className={styles["regular-btn"]} onClick={onClick}>
       {text}
     </button>
   );
@@ -18,7 +18,7 @@ export const RegularButton = ({ text, onClick }) => {
  */
 export const PrimaryButton = ({ text, onClick }) => {
   return (
-    <button className={btnStyles["primary-btn"]} onClick={onClick}>
+    <button className={styles["primary-btn"]} onClick={onClick}>
       {text}
     </button>
   );

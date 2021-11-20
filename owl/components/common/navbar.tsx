@@ -1,7 +1,7 @@
 import { Search } from "react-iconly";
-import styles from "../styles/scss/components/Navbar.module.scss";
-import { Logo } from "./svgs/logo";
-import { PrimaryButton, RegularButton } from "../components/buttons";
+import { Logo } from "./logo";
+import styles from "../../styles/components/common/Navbar.module.scss";
+import { PrimaryButton, RegularButton } from "./buttons";
 
 /**
  * Navbar

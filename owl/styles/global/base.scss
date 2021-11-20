@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./fonts.scss";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-grey4;
+  font-family: "GTWalsheim Pro";
+  font-weight: 900;
+}
+
+body {
+  font-family: "Sofia Pro";
+  font-weight: 400;
+}
+
+button:hover {
+  filter: brightness(0.9);
+  transition: brightness 400ms ease-in-out;
+}

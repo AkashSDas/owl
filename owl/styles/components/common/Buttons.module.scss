@@ -1,0 +1,15 @@
+@mixin base-btn {
+  @apply w-max rounded-full flex items-center justify-center;
+  height: 45;
+  padding: 12px 20px 14px 20px;
+}
+
+.regular-btn {
+  @apply bg-grey1 text-btn-17 text-grey3 font-bold;
+  @include base-btn;
+}
+
+.primary-btn {
+  @apply bg-gradient-to-r from-purple2 to-purple3 text-btn-17 text-grey0 font-bold;
+  @include base-btn;
+}
