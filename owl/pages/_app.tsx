@@ -4,6 +4,7 @@ import "../styles/global/base.scss";
 import { IconlyProvider } from "react-iconly";
 import { Navbar } from "../components/common/navbar";
 import { CursorProvider } from "../components/cursor/cursor_provider";
+import { SkewScrollingAnimation } from "../components/skew_scrolling/animation";
 
 /**
  * @remarks
@@ -18,7 +19,9 @@ const MyApp = ({ Component, pageProps }) => {
         primaryColor="hsla(0, 0%, 0%, 0.5)"
       >
         <Navbar />
-        <Component {...pageProps} />
+        <SkewScrollingAnimation>
+          <Component {...pageProps} />
+        </SkewScrollingAnimation>
       </IconlyProvider>
     </CursorProvider>
   );

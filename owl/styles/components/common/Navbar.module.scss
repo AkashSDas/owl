@@ -1,4 +1,5 @@
 .navbar {
-  @apply w-full px-5 py-4 bg-primary flex flex-row justify-between items-center;
+  @apply w-full px-5 py-4 bg-primary flex flex-row justify-between 
+  items-center z-20 fixed top-0;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.05);
 }
