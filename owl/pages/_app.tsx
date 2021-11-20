@@ -3,6 +3,7 @@ import "../styles/global/base.scss";
 
 import { IconlyProvider } from "react-iconly";
 import { Navbar } from "../components/common/navbar";
+import { CursorProvider } from "../components/cursor/cursor_provider";
 
 /**
  * @remarks
@@ -10,14 +11,16 @@ import { Navbar } from "../components/common/navbar";
  */
 const MyApp = ({ Component, pageProps }) => {
   return (
-    <IconlyProvider
-      set="light"
-      size="medium"
-      primaryColor="hsla(0, 0%, 0%, 0.5)"
-    >
-      <Navbar />
-      <Component {...pageProps} />
-    </IconlyProvider>
+    <CursorProvider>
+      <IconlyProvider
+        set="light"
+        size="medium"
+        primaryColor="hsla(0, 0%, 0%, 0.5)"
+      >
+        <Navbar />
+        <Component {...pageProps} />
+      </IconlyProvider>
+    </CursorProvider>
   );
 };
 
