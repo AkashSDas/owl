@@ -1,0 +1,54 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  contain: layout style size;
+  pointer-events: none;
+  will-change: transform;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    display: block;
+    width: 48px;
+    height: 48px;
+    transform: scale(0);
+    background: black;
+    border-radius: 50%;
+    transition: all 0.3s ease-out;
+  }
+
+  &.media-blend {
+    z-index: 100;
+
+    @supports (mix-blend-mode: exclusion) {
+      mix-blend-mode: exclusion;
+    }
+
+    .cursor-media-filter {
+      filter: invert(1);
+    }
+  }
+}
+
+.visible {
+  &::before {
+    transform: scale(0.2);
+  }
+}
+
+.scale {
+  &::before {
+    transform: scale(2) !important;
+  }
+}
+
+.cursor-white {
+  &::before {
+    background: white;
+  }
+}
