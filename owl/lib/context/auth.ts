@@ -1,4 +1,5 @@
-import { ChangeEventHandler, createContext } from "react";
+import { FormikErrors, FormikTouched } from "formik";
+import { ChangeEventHandler, createContext, FocusEventHandler } from "react";
 
 export interface ISignupForm {
   username: string;
@@ -13,6 +14,9 @@ interface ISignupContext {
   values: ISignupForm;
   handleSubmit: Function;
   handleChange: ChangeEventHandler<HTMLInputElement>;
+  errors: FormikErrors<ISignupForm>;
+  touched: FormikTouched<ISignupForm>;
+  handleBlur: FocusEventHandler<HTMLInputElement>;
 }
 
 export const SignupContext = createContext<ISignupContext>(null);
