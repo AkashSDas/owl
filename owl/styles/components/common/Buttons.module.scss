@@ -5,11 +5,11 @@
 }
 
 .regular-btn {
-  @apply bg-grey1 text-btn-17 text-grey3 font-bold;
+  @apply bg-grey1 text-btn-17 text-grey3 font-medium;
   @include base-btn;
 }
 
 .primary-btn {
-  @apply bg-gradient-to-r from-purple2 to-purple3 text-btn-17 text-grey0 font-bold;
+  @apply bg-gradient-to-r from-purple2 to-purple3 text-btn-17 text-grey0 font-medium;
   @include base-btn;
 }
