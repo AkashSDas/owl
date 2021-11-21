@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { SignupContext } from "../../lib/context/auth";
-import { Hide, Lock, Message, Show, User } from "react-iconly";
+import { Calendar, Hide, Lock, Message, Show, User } from "react-iconly";
 
 const FormLabel = ({ text, htmlFor }: { text: string; htmlFor: string }) => {
   return (
@@ -76,6 +76,27 @@ export const PasswordField = () => {
             <Show primaryColor="hsla(0, 0%, 19%, 1)" size="large" />
           )}
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const DateField = () => {
+  const { values, handleChange } = useContext(SignupContext);
+
+  return (
+    <div className="form-field w-full">
+      <FormLabel text="Date of birth" htmlFor="dateOfBirth" />
+      <div className="relative flex justify-between items-center space-x-4 bg-grey1 px-6 py-4 rounded-xl">
+        <Calendar primaryColor="hsla(0, 0%, 19%, 1)" />
+        <input
+          name="dateOfBirth"
+          value={values.dateOfBirth}
+          onChange={handleChange}
+          className={`w-full bg-grey1 outline-none text-desktop-body-intro right-6`}
+          type="date"
+          placeholder="When were you born?"
+        />
       </div>
     </div>
   );
