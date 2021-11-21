@@ -2,6 +2,7 @@ import { Search } from "react-iconly";
 import { Logo } from "./logo";
 import styles from "../../styles/components/common/Navbar.module.scss";
 import { PrimaryButton, RegularButton } from "./buttons";
+import Link from "next/link";
 
 /**
  * Navbar
@@ -26,7 +27,11 @@ export const Navbar = () => {
 const Actions = () => {
   return (
     <div className="flex space-x-8 items-center">
-      <TextNavItem text="Explore" />
+      <Link href="/explore">
+        <a>
+          <TextNavItem text="Explore" />
+        </a>
+      </Link>
       <TextNavItem text="Teacher" />
       <div className="cursor-pointer">
         <Search />
