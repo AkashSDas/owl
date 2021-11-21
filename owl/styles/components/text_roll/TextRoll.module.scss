@@ -1,0 +1,53 @@
+.roller {
+  $transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+
+  span {
+    display: inline-block;
+    color: transparent;
+    transition: $transition;
+
+    &::selection {
+      color: transparent;
+    }
+
+    &::after,
+    &::before {
+      content: attr(data-text);
+      display: block;
+      position: absolute;
+      transition: $transition;
+    }
+
+    &::after {
+      top: 105%;
+      transform: skewY(48deg);
+      transform-origin: left top;
+    }
+
+    &::before {
+      top: 0;
+      transform: skewY(0);
+      transform-origin: right bottom;
+    }
+  }
+
+  &:hover {
+    span {
+      &::after {
+        top: 0;
+        transform: skewY(0);
+        transform-origin: left top;
+      }
+
+      &::before {
+        top: -105%;
+        transform: skewY(48deg);
+        transform-origin: right bottom;
+      }
+    }
+  }
+}
