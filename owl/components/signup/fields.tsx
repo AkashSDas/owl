@@ -10,8 +10,13 @@ const FormLabel = ({ text, htmlFor }: { text: string; htmlFor: string }) => {
   );
 };
 
+const FormFieldError = ({ text }: { text: string }) => {
+  return <div className="text-error">{text}</div>;
+};
+
 export const UsernameField = () => {
-  const { values, handleChange } = useContext(SignupContext);
+  const { values, handleChange, touched, errors, handleBlur } =
+    useContext(SignupContext);
 
   return (
     <div className="form-field w-full">
@@ -25,14 +30,19 @@ export const UsernameField = () => {
           onChange={handleChange}
           type="text"
           placeholder="What you want us to call you?"
+          onBlur={handleBlur}
         />
       </div>
+      {errors.username && touched.username ? (
+        <FormFieldError text={errors.username} />
+      ) : null}
     </div>
   );
 };
 
 export const EmailField = () => {
-  const { values, handleChange } = useContext(SignupContext);
+  const { values, handleChange, handleBlur, touched, errors } =
+    useContext(SignupContext);
 
   return (
     <div className="form-field w-full">
@@ -46,15 +56,20 @@ export const EmailField = () => {
           className="w-full bg-grey1 outline-none text-desktop-body-intro"
           type="email"
           placeholder="You email address, Working one :-)"
+          onBlur={handleBlur}
         />
       </div>
+      {errors.email && touched.email ? (
+        <FormFieldError text={errors.email} />
+      ) : null}
     </div>
   );
 };
 
 export const PasswordField = () => {
   const [show, setShow] = useState(false);
-  const { values, handleChange } = useContext(SignupContext);
+  const { values, handleChange, touched, handleBlur, errors } =
+    useContext(SignupContext);
 
   return (
     <div className="form-field w-full">
@@ -68,6 +83,7 @@ export const PasswordField = () => {
           className="w-full bg-grey1 outline-none text-desktop-body-intro placeholder-shown:opacity-60"
           type={show ? "text" : "password"}
           placeholder="🏀🏀🏀🏀🏀🏀🏀🏀🏀🏀🏀"
+          onBlur={handleBlur}
         />
         <div onClick={() => setShow(!show)}>
           {show ? (
@@ -77,12 +93,16 @@ export const PasswordField = () => {
           )}
         </div>
       </div>
+      {errors.password && touched.password ? (
+        <FormFieldError text={errors.password} />
+      ) : null}
     </div>
   );
 };
 
 export const DateField = () => {
-  const { values, handleChange } = useContext(SignupContext);
+  const { values, handleChange, handleBlur, errors, touched } =
+    useContext(SignupContext);
 
   return (
     <div className="form-field w-full">
@@ -96,8 +116,12 @@ export const DateField = () => {
           className={`w-full bg-grey1 outline-none text-desktop-body-intro right-6`}
           type="date"
           placeholder="When were you born?"
+          onBlur={handleBlur}
         />
       </div>
+      {errors.dateOfBirth && touched.dateOfBirth ? (
+        <FormFieldError text={errors.dateOfBirth} />
+      ) : null}
     </div>
   );
 };
