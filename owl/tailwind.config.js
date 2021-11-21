@@ -6,6 +6,15 @@ module.exports = {
   theme: {
     extend: {},
 
+    screens: {
+      sm: "640px",
+      md: "768px",
+      mymd: "962px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
+
     colors: {
       primary: "white",
       secondary: "hsla(265, 100%, 59%, 1)",
@@ -48,6 +57,12 @@ module.exports = {
       // For tablet size take one level lower font size
       // of desktop of which you are using like (if h1 is needed then
       // take h2 of desktop)
+      "tablet-h1": ["2.125rem"],
+      "tablet-h2": ["2.5rem"],
+      "tablet-h3": ["1.875rem"],
+      "tablet-h4": ["1.5rem"],
+      "tablet-body-intro": ["1.5rem", "140%"],
+      "tablet-body-main": ["1.25rem", "140%"],
 
       // Mobile
       "mobile-h1": ["2.125rem"],

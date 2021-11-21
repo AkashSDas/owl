@@ -30,8 +30,8 @@ export const HeroSection = () => {
 
 const TagLineText = () => {
   return (
-    <div className="w-full flex flex-col justify-center items-center space-y-8">
-      <h1 className="mt-24 text-desktop-h1 z-10 flex flex-col justify-center items-center">
+    <div className="w-full flex flex-col justify-center items-center space-y-8 absolute top-2/4 bottom-2/4">
+      <h1 className="text-mobile-h4 sm:text-tablet-h1 lg:text-desktop-h1 z-10 flex flex-col justify-center items-center">
         <div>
           Learn like a <span className="text-purple">Pro</span>
         </div>
