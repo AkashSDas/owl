@@ -8,12 +8,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "formik": "^2.2.9",
     "framer-motion": "^5.3.1",
     "glamor": "^2.20.40",
     "next": "12.0.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hot-toast": "^2.1.1",
     "react-iconly": "^2.2.4",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
