@@ -4,9 +4,12 @@ export interface ISignupForm {
   username: string;
   email: string;
   password: string;
+  dateOfBirth: string;
 }
 
 interface ISignupContext {
+  loading: boolean;
+  setLoading: Function;
   values: ISignupForm;
   handleSubmit: Function;
   handleChange: ChangeEventHandler<HTMLInputElement>;
