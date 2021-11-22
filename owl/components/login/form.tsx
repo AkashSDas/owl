@@ -2,11 +2,17 @@ import { Formik } from "formik";
 import { MouseEventHandler, useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { ILoginForm, LoginContext } from "../../lib/context/auth";
-import { login, saveUserToLocalStorage } from "../../lib/helpers/auth";
+import { AuthContext } from "../../lib/context/user";
+import {
+  isAuthenticated,
+  login,
+  saveUserToLocalStorage,
+} from "../../lib/helpers/auth";
 import { loginValidationSchema } from "../../lib/validation";
 import { EmailField, PasswordField } from "./fields";
 
 export const LoginForm = () => {
+  const { setUser } = useContext(AuthContext);
   const initialValues = { email: "", password: "" };
 
   const [loading, setLoading] = useState(false);
@@ -18,6 +24,20 @@ export const LoginForm = () => {
       saveUserToLocalStorage(data.data, () => {
         toast(data.msg, { icon: "✅" });
       });
+      const auth = isAuthenticated();
+      if (auth)
+        setUser({
+          token: auth.token,
+          data: {
+            createdAt: auth.user.createdAt,
+            dateOfBirth: auth.user.dateOfBirth,
+            email: auth.user.email,
+            profilePicURL: auth.user.profilePicURL,
+            roles: auth.user.roles,
+            updatedAt: auth.user.updatedAt,
+            username: auth.user.username,
+          },
+        });
     }
     setLoading(() => false);
   };
