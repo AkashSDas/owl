@@ -8,12 +8,20 @@ import { CursorProvider } from "../components/cursor/cursor_provider";
 import { SkewScrollingAnimation } from "../components/skew_scrolling/animation";
 import { AuthWrapper } from "../components/auth/auth_wrapper";
 import { AuthProvider } from "../components/auth/auth_provider";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 /**
  * @remarks
  * IconlyProvider - medium gives icons 24X24 size
  */
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps, router }) => {
+  const slideAnimation = {
+    pageInitial: { y: "100vh", opacity: 0, skewY: "7deg" },
+    pageAnimate: { y: "0vh", opacity: 1, skewY: "0deg" },
+    pageExit: { y: "-100vh", opacity: 0, skewY: "7deg" },
+  };
+
   return (
     <AuthProvider>
       <AuthWrapper>
@@ -24,9 +32,20 @@ const MyApp = ({ Component, pageProps }) => {
             primaryColor="hsla(0, 0%, 0%, 0.5)"
           >
             <Navbar />
-            <SkewScrollingAnimation>
-              <Component {...pageProps} />
-            </SkewScrollingAnimation>
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
+              <motion.div
+                key={router.route}
+                initial="pageInitial"
+                animate="pageAnimate"
+                exit="pageExit"
+                variants={slideAnimation}
+                transition={{ type: "tween", ease: "easeOut", duration: 0.5 }}
+              >
+                <SkewScrollingAnimation>
+                  <Component {...pageProps} />
+                </SkewScrollingAnimation>
+              </motion.div>
+            </AnimatePresence>
             <Toaster />
           </IconlyProvider>
         </CursorProvider>
