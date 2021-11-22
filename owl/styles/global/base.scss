@@ -18,6 +18,16 @@ h6 {
 body {
   font-family: "Sofia Pro";
   font-weight: 400;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: hsla(0, 0%, 98%, 1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    background: hsla(265, 100%, 59%, 1);
+  }
 }
 
 button:hover {
