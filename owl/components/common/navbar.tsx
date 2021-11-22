@@ -3,6 +3,8 @@ import { Logo } from "./logo";
 import styles from "../../styles/components/common/Navbar.module.scss";
 import { PrimaryButton, RegularButton } from "./buttons";
 import Link from "next/link";
+import { useRouter } from "next/dist/client/router";
+import { DisplayOnNoAuth } from "../auth/display_on_auth";
 
 /**
  * Navbar
@@ -25,6 +27,8 @@ export const Navbar = () => {
  * Action items on the left side of navbar
  */
 const Actions = () => {
+  const router = useRouter();
+
   return (
     <div className="flex space-x-8 items-center">
       <Link href="/explore">
@@ -36,8 +40,18 @@ const Actions = () => {
       <div className="cursor-pointer">
         <Search />
       </div>
-      <RegularButton text="Login" onClick={() => {}} />
-      <PrimaryButton text="Sign up" onClick={() => {}} />
+      <DisplayOnNoAuth>
+        <RegularButton
+          text="Login"
+          onClick={() => router.push("/auth/login")}
+        />
+      </DisplayOnNoAuth>
+      <DisplayOnNoAuth>
+        <PrimaryButton
+          text="Sign up"
+          onClick={() => router.push("/auth/signup")}
+        />
+      </DisplayOnNoAuth>
     </div>
   );
 };
