@@ -2,7 +2,13 @@ import { useContext, useState } from "react";
 import { SignupContext } from "../../lib/context/auth";
 import { Calendar, Hide, Lock, Message, Show, User } from "react-iconly";
 
-const FormLabel = ({ text, htmlFor }: { text: string; htmlFor: string }) => {
+export const FormLabel = ({
+  text,
+  htmlFor,
+}: {
+  text: string;
+  htmlFor: string;
+}) => {
   return (
     <label htmlFor={htmlFor} className="font-medium text-caption mb-2">
       {text}
@@ -10,7 +16,7 @@ const FormLabel = ({ text, htmlFor }: { text: string; htmlFor: string }) => {
   );
 };
 
-const FormFieldError = ({ text }: { text: string }) => {
+export const FormFieldError = ({ text }: { text: string }) => {
   return <div className="text-error">{text}</div>;
 };
 
