@@ -62,6 +62,9 @@ export const login: Controller = async (req, res) => {
   const token = jsonwebtoken.sign({ _id: user._id }, process.env.SECRET_KEY);
   res.cookie("token", token, { expires: new Date(Number(new Date()) + 9999) });
 
+  user.encryptPassword = undefined;
+  user.salt = undefined;
+
   return responseMsg(res, {
     status: 200,
     error: false,
