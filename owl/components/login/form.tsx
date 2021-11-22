@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import { MouseEventHandler, useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { ILoginForm, LoginContext } from "../../lib/context/auth";
-import { login } from "../../lib/helpers/auth";
+import { login, saveUserToLocalStorage } from "../../lib/helpers/auth";
 import { loginValidationSchema } from "../../lib/validation";
 import { EmailField, PasswordField } from "./fields";
 
@@ -12,9 +12,13 @@ export const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (values: ILoginForm) => {
     setLoading(() => true);
-    const [success, err] = await login(values);
+    const [data, err] = await login(values);
     if (err) toast(err.msg, { icon: "❌" });
-    else toast(success.msg, { icon: "✅" });
+    else {
+      saveUserToLocalStorage(data.data, () => {
+        toast(data.msg, { icon: "✅" });
+      });
+    }
     setLoading(() => false);
   };
 
