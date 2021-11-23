@@ -1,9 +1,6 @@
 import { Formik } from "formik";
 import { MouseEventHandler, useContext, useState } from "react";
-import {
-  ITeacherSignupForm,
-  TeacherSignupContext,
-} from "../../lib/context/auth";
+import { TeacherSignupContext } from "../../lib/context/auth";
 import { loginValidationSchema } from "../../lib/validation";
 import {
   BioField,
@@ -11,42 +8,40 @@ import {
   QualificationsField,
   YearsOfExperienceField,
 } from "./fields";
+import { toast } from "react-hot-toast";
+import { AuthContext } from "../../lib/context/user";
+import { becomeTeacher } from "../../lib/helpers/auth";
 
+/**
+ * @remarks
+ *
+ * Here there is not onSubmit on formik (it has dummy/empty function which won't be
+ * fired why submitting the form). This has to be done since qualification
+ * and expertise are not formvalues and they custom values which we'll not
+ * have access to handleSubmit in TeacherSignupForm as provider won't be
+ * have its access. But form will be submitted normally and handleSubmit on
+ * Submit btn will be fired which will take care of teacher signup.
+ *
+ * Also none of the formvalue and nor qualification and expertise has any formik
+ * error and touch values available for validation. For this validation is done
+ * in handleSubmit in Submit btn
+ */
 export const TeacherSignupForm = () => {
   const initialValues = { bio: "", yearsOfExperience: 0 };
   const [qualifications, setQualifications] = useState([]);
   const [expertise, setExpertise] = useState([]);
-
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (values: ITeacherSignupForm) => {
-    setLoading(() => true);
-    // const [data, err] = await login(values);
-    // if (err) toast(err.msg, { icon: "❌" });
-    // else {
-    //   saveUserToLocalStorage(data.data, () => {
-    //     toast(data.msg, { icon: "✅" });
-    //   });
-    setLoading(() => false);
-  };
 
   return (
     <Formik
-      onSubmit={handleSubmit}
+      onSubmit={() => {}}
       initialValues={initialValues}
       validationSchema={loginValidationSchema}
     >
-      {({
-        values,
-        handleSubmit,
-        handleChange,
-        errors,
-        touched,
-        handleBlur,
-      }) => (
+      {({ values, handleChange, errors, touched, handleBlur }) => (
         <TeacherSignupContext.Provider
           value={{
             values,
-            handleSubmit,
             handleChange,
             loading,
             setLoading,
@@ -76,7 +71,41 @@ export const TeacherSignupForm = () => {
 };
 
 const SubmitButton = () => {
-  const { handleSubmit, loading } = useContext(TeacherSignupContext);
+  const { user } = useContext(AuthContext);
+
+  const { values, qualifications, expertise, setLoading, loading } =
+    useContext(TeacherSignupContext);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!user) return toast("You must be logged", { icon: "❌" });
+
+    // Validation
+    if (qualifications.length === 0)
+      return toast("You should have atleast one qualification", { icon: "❌" });
+    if (expertise.length === 0)
+      return toast("You should have atleast one expertise", { icon: "❌" });
+    if (values.yearsOfExperience < 0)
+      return toast("Years of experience should be positive", { icon: "❌" });
+    if (values.bio.length === 0)
+      return toast("Bio is required", { icon: "❌" });
+
+    setLoading(() => true);
+    const payload = {
+      ...values,
+      qualifications: qualifications.map((q) => q._id),
+      expertise: expertise.map((exp) => exp._id),
+    };
+    const [data, err] = await becomeTeacher(
+      payload,
+      user.token,
+      user.data?._id
+    );
+    if (err) toast(err.msg, { icon: "❌" });
+    else toast(data.msg, { icon: "✅" });
+    setLoading(() => false);
+  };
 
   return (
     <button
