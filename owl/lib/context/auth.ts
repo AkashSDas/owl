@@ -54,8 +54,6 @@ export const LoginContext = createContext<ILoginContext>(null);
 export interface ITeacherSignupForm {
   bio: string;
   yearsOfExperience: number;
-  qualifications: string[];
-  expertise: string[];
 }
 
 interface ITeacherSignupContext {
@@ -67,6 +65,10 @@ interface ITeacherSignupContext {
   errors: FormikErrors<ITeacherSignupForm>;
   touched: FormikTouched<ITeacherSignupForm>;
   handleBlur: FocusEventHandler<HTMLInputElement>;
+  qualifications: any[];
+  expertise: any[];
+  setQualifications: Function;
+  setExpertise: Function;
 }
 
 export const TeacherSignupContext = createContext<ITeacherSignupContext>(null);
