@@ -45,3 +45,20 @@ export function isAuthenticated() {
     return JSON.parse(localStorage.getItem("jwt"));
   return null;
 }
+
+/**
+ * Become a teacher
+ */
+export const becomeTeacher = async (
+  data: any,
+  token: string,
+  userId: string
+) => {
+  const [result, err] = await fetchFromAPI(`/user/${userId}/roles/teacher`, {
+    method: "POST",
+    data,
+    token,
+  });
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
