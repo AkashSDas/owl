@@ -13,7 +13,9 @@ import { motion } from "framer-motion";
 
 /**
  * @remarks
- * IconlyProvider - medium gives icons 24X24 size
+ * - IconlyProvider - medium gives icons 24X24 size
+ * - The slide animation's `pageAnimate` portion is causing increase in height
+ * of motion.div which leads to large white space in bottom of each page
  */
 const MyApp = ({ Component, pageProps, router }) => {
   const slideAnimation = {
