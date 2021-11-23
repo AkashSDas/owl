@@ -13,3 +13,9 @@
   @apply bg-gradient-to-r from-purple2 to-purple3 text-btn-17 text-grey0 font-medium;
   @include base-btn;
 }
+
+.secondary-btn {
+  @apply bg-purple-light font-medium text-small text-purple rounded-full;
+  height: 45px;
+  padding: 10px 16px 12px 16px;
+}
