@@ -36,6 +36,7 @@ export const LoginForm = () => {
             roles: auth.user.roles,
             updatedAt: auth.user.updatedAt,
             username: auth.user.username,
+            _id: auth.user._id,
           },
         });
     }

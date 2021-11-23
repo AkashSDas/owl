@@ -21,6 +21,7 @@ export const AuthWrapper = ({ children }: { children: JSX.Element }) => {
           roles: auth.user.roles,
           updatedAt: auth.user.updatedAt,
           username: auth.user.username,
+          _id: auth.user._id,
         },
       });
   }, []);
