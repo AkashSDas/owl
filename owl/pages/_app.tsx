@@ -10,6 +10,7 @@ import { AuthWrapper } from "../components/auth/auth_wrapper";
 import { AuthProvider } from "../components/auth/auth_provider";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import { BaseSidebar } from "../components/common/sidebar";
 
 /**
  * @remarks
@@ -34,6 +35,7 @@ const MyApp = ({ Component, pageProps, router }) => {
             primaryColor="hsla(0, 0%, 0%, 0.5)"
           >
             <Navbar />
+            <BaseSidebar />
             <AnimatePresence initial={false} exitBeforeEnter={true}>
               <motion.div
                 key={router.route}
