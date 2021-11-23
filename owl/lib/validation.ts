@@ -21,3 +21,16 @@ export const loginValidationSchema = Yup.object().shape({
     .required("Password is required")
     .min(6, "Password should be atleast 6 characters long"),
 });
+
+export const courseCreateValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .required("Course name is required")
+    .min(6, "Course name should be atleast 6 characters long"),
+  description: Yup.string()
+    .required("Description is required")
+    .min(6, "Description should be atleast 6 characters long"),
+  level: Yup.string().required("Course level is required"),
+  price: Yup.number()
+    .required("Course price is required")
+    .min(0, "Course price should be a positive number"),
+});
