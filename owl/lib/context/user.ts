@@ -10,6 +10,7 @@ export interface IUser {
     profilePicURL: string;
     username: string;
     roles: string[];
+    _id: string;
   };
 }
 
