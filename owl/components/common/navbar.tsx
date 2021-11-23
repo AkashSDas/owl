@@ -36,7 +36,11 @@ const Actions = () => {
           <TextNavItem text="Explore" />
         </a>
       </Link>
-      <TextNavItem text="Teacher" />
+      <Link href="/auth/teacher-signup">
+        <a>
+          <TextNavItem text="Teacher" />
+        </a>
+      </Link>
       <div className="cursor-pointer">
         <Search />
       </div>
