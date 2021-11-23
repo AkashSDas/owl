@@ -60,7 +60,6 @@ interface ITeacherSignupContext {
   loading: boolean;
   setLoading: Function;
   values: ITeacherSignupForm;
-  handleSubmit: Function;
   handleChange: ChangeEventHandler<HTMLInputElement>;
   errors: FormikErrors<ITeacherSignupForm>;
   touched: FormikTouched<ITeacherSignupForm>;
