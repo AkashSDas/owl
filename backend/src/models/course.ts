@@ -37,7 +37,6 @@ export type CourseDocument = Document & {
   teacherId: TeacherDocument;
   name: string;
   description: string;
-  ratings: number;
   coverImgURL: string;
   numberOfStudentsEnrolled: number;
   price: number;
@@ -52,7 +51,6 @@ const CourseSchema = new Schema<CourseDocument>(
     teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
     name: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
-    ratings: { type: Number, required: true, default: 0 },
     coverImgURL: {
       type: String,
       required: true,
