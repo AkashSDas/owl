@@ -17,3 +17,21 @@ export const createCourse = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Get a user's (teacher) courses paginated
+ */
+export const getUserAllCourses = async (
+  userId: string,
+  token: string,
+  limit: number,
+  next?: string
+) => {
+  let url = `/course/${userId}/my-all?limit=${limit}`;
+  if (next) url = `${url}&next=${next}`;
+
+  const [result, err] = await fetchFromAPI(url, { method: "GET", token });
+  if (err) return [null, err.response.data];
+  console.log(result);
+  return [result.data, null];
+};
