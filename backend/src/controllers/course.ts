@@ -1,4 +1,4 @@
-import Course from "../models/course";
+import Course, { CourseDocument } from "../models/course";
 import { Controller, responseMsg, responseMsgs, runAsync } from "../utils";
 import { IncomingForm } from "formidable";
 import { courseUpdateFormCallback } from "../helpers/course";
@@ -8,6 +8,9 @@ import { deleteFileInFirebaseStorage } from "../firebase";
 import { getOrCreateUserPurchaseDoc } from "../helpers/user_purchase";
 import { createPaymentIntentAndCharge } from "../payments/payment";
 import UserPurchase from "../models/user_purchase";
+import MongoPaging from "mongo-cursor-pagination";
+import Teacher from "../models/teacher";
+import Feedback from "../models/feedback";
 
 /**
  * Create course
@@ -27,11 +30,19 @@ import UserPurchase from "../models/user_purchase";
  * This controller should be used in conjunction with
  * - auth middlewares
  * - isTeacher middlewares to see if the requested user is a teacher or not
- * - getTeacherById middleware which will set req.teacher which will used for teacherId
+ * - getUserById middleware which will set req.profile which will used for userId
  */
 export const createCourse: Controller = async (req, res) => {
+  // Getting teacher
+  const [teacher, err1] = await runAsync(
+    Teacher.findOne({ userId: req.profile._id }).exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  else if (!teacher) return responseMsg(res, { msg: "Teacher doesn't exists" });
+
+  // Creating course
   const [course, err] = await runAsync(
-    new Course({ teacherId: req.profile._id, ...req.body }).save()
+    new Course({ teacherId: teacher._id, ...req.body }).save()
   );
   if (err || !course) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
@@ -218,6 +229,16 @@ export const purchaseCourse: Controller = async (req, res) => {
     ).exec()
   );
   if (!err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  // Increment number of students entrolled in this course
+  const [, err2] = await runAsync(
+    Course.updateOne(
+      { _id: courseId as any },
+      { $inc: { numberOfStudentsEnrolled: 1 } }
+    ).exec()
+  );
+  if (!err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
   return responseMsg(res, {
     status: 200,
     error: false,
