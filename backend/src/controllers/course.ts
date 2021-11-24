@@ -245,3 +245,95 @@ export const purchaseCourse: Controller = async (req, res) => {
     msg: "Successfully purchased the course",
   });
 };
+
+/**
+ * Get my all courses
+ *
+ * @todo
+ * - Check whether the user exists or not
+ */
+export const getUserAllCourses: Controller = async (req, res) => {
+  const next = req.query.next;
+  const LIMIT = 1;
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : LIMIT;
+  const user = req.profile;
+
+  const [teacherDoc, err1] = await runAsync(
+    Teacher.findOne({ userId: user._id }, "_id").exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!teacherDoc)
+    return responseMsg(res, { msg: "This teacher does not exists" });
+
+  const [data, err2] = await runAsync(
+    MongoPaging.find(Course.collection, {
+      query: { teacherId: teacherDoc._id },
+      paginatedField: "updatedAt",
+      limit,
+      next,
+    })
+  );
+  if (err2 || !data) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  let courses = [];
+  for (let i = 0; i < data.results.length; i++) {
+    const [course, err] = await runAsync(
+      Course.populate(data.results[i], "level")
+    );
+    if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+    const c: CourseDocument = course;
+
+    // Get course rating
+    const [ratingDocs, err2] = await runAsync(
+      Feedback.find({ userId: user._id, courseId: c._id }, "rating").exec()
+    );
+    if (err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+    let ratings = 0;
+    if (ratingDocs && ratingDocs.length > 0) {
+      ratingDocs.forEach((r: any) => (ratings = ratings + r.rating));
+      ratings = parseFloat((ratings / ratingDocs.length).toFixed(2));
+    }
+
+    // Get course watch time
+    const [lessonDocs, err3] = await runAsync(
+      Lesson.find({ courseId: c._id }, "videoDuration").exec()
+    );
+    if (err3) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+    let duration = 0;
+    if (lessonDocs && lessonDocs.length > 0) {
+      lessonDocs.forEach((l: any) => (duration = duration + l.videoDuration));
+      duration = parseFloat((duration / lessonDocs.length).toFixed(2));
+    }
+
+    console.log(duration, ratings);
+
+    courses.push({
+      _id: c._id,
+      teacherId: c.teacherId,
+      name: c.name,
+      description: c.description,
+      coverImgURL: c.coverImgURL,
+      price: c.price,
+      published: c.published,
+      level: c.level,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+      numberOfStudentsEnrolled: c.numberOfStudentsEnrolled,
+      duration,
+      ratings,
+    });
+  }
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: `Retrived ${courses.length} courses successfully`,
+    data: {
+      courses,
+      previous: data.previous,
+      hasPrevious: data.hasPrevious,
+      next: data.next,
+      hasNext: data.hasNext,
+    },
+  });
+};
