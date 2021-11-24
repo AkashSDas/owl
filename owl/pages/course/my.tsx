@@ -16,7 +16,30 @@ const Divider = () => (
 );
 
 const MyAllCourses = () => {
-  const { loading, courses, getCourses } = useUserAllCourses(3);
+  const { loading, courses, getCourses } = useUserAllCourses(1);
+
+  const loadMoreBtn = () => {
+    if (courses.hasNext) {
+      return (
+        <button
+          style={{ color: "hsla(0, 0%, 0%, 1)" }}
+          className={btnStyle["regular-btn"]}
+          onClick={getCourses}
+        >
+          Load more
+        </button>
+      );
+    }
+
+    return (
+      <div
+        style={{ color: "hsla(0, 0%, 0%, 1)", cursor: "unset" }}
+        className={`${btnStyle["regular-btn"]}`}
+      >
+        You've reached the end
+      </div>
+    );
+  };
 
   return (
     <section className="mt-8 w-full flex flex-col items-center space-y-4">
@@ -29,6 +52,7 @@ const MyAllCourses = () => {
             <Divider />
           </>
         ))}
+      {!loading ? loadMoreBtn() : null}
       {loading ? (
         <div className="w-full text-medium font-bold text-center">
           🔎 Loading more...
