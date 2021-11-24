@@ -15,8 +15,8 @@ import { BaseSidebar } from "../components/common/sidebar";
 /**
  * @remarks
  * - IconlyProvider - medium gives icons 24X24 size
- * - The slide animation's `pageAnimate` portion is causing increase in height
- * of motion.div which leads to large white space in bottom of each page
+ * - SmoothScrolling in SkewScrolling is causing increase in height of
+ * pages which leads to large white space in bottom of each page
  */
 const MyApp = ({ Component, pageProps, router }) => {
   const slideAnimation = {
