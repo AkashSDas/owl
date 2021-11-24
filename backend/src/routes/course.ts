@@ -6,6 +6,7 @@ import { Router } from "express";
 import {
   createCourse,
   deleteCourse,
+  getUserAllCourses,
   publishCourse,
   purchaseCourse,
   updateCoursePublicData,
@@ -77,4 +78,13 @@ router.post(
   purchaseCourseValidation,
   validationCheck,
   purchaseCourse
+);
+
+// Get courses of a user paginated
+router.get(
+  "/:userId/my-all",
+  isLoggedIn,
+  isAuthenticated,
+  isTeacher,
+  getUserAllCourses
 );
