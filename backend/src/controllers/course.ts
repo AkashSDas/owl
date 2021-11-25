@@ -143,6 +143,12 @@ export const deleteCourse: Controller = async (req, res) => {
  *
  * @remarks
  * To publish a course, it should've atleast 1 chapter with 1 lesson
+ *
+ * @todo
+ * - User can do such that pass all the checks and upload the course and
+ * then make the course empty and still the course will be published. So add
+ * check while deleting lesson and chapter to check if the course is published
+ * or not
  */
 export const publishCourse: Controller = async (req, res) => {
   const courseId = req.params.courseId;
