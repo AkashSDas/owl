@@ -89,7 +89,7 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
             className={btnStyle["secondary-btn"]}
             onClick={() => {
               if (loading) return toast("Wait", { icon: "⏰" });
-              router.push(`/course/update/${course._id}`);
+              router.push(`/course/${course._id}/update`);
             }}
           >
             Update

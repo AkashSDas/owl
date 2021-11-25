@@ -1,4 +1,3 @@
-import { useRouter } from "next/dist/client/router";
 import { EmojiSectionForSidebar } from "../../../components/common/emoji_section";
 import { CourseUpdateForm } from "../../../components/course_update/form";
 
