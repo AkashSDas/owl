@@ -11,7 +11,18 @@ import {
  * This function is a callback for formidable IncomingForm.parse callback in
  * **updateCoursePublicData** controller
  *
- * This callback does the updating work of course public data
+ * @remarks
+ *
+ * This callback does the updating work of course public data.
+ * Course public data which can be updated are
+ * - name
+ * - description
+ * - coverImgURL (client gives coverImg which is a img file, which saved in firebase and then coverImgURL is updated with new url)
+ * - price
+ * - level
+ *
+ * Now course published data can only be updated using `publishCourse` controller
+ * which checks if everything is there in the course.
  */
 export const courseUpdateFormCallback = async (
   req: Request,
@@ -58,6 +69,7 @@ export const courseUpdateFormCallback = async (
         description: updatedCourse.description,
         level: updatedCourse.level,
         coverImgURL: updatedCourse.coverImgURL,
+        price: updatedCourse.price,
       },
     },
   });
