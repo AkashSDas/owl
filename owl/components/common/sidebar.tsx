@@ -7,7 +7,12 @@ export const BaseSidebar = () => {
   const router = useRouter();
 
   const routes = ["/course/create", "/course/my"];
-  if (routes.filter((r) => r === router.route).length !== 0) {
+  const patterns = [new RegExp("/course/update/*")];
+  if (
+    routes.filter(
+      (r) => r === router.route || patterns.map((p) => p.exec(r)).length !== 0
+    ).length !== 0
+  ) {
     return (
       <div
         style={{ width: "250px", marginTop: "72px" }}
