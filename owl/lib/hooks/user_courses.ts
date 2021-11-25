@@ -45,5 +45,5 @@ export const useUserAllCourses = (limit: number) => {
     getCourses();
   }, [user]);
 
-  return { courses, loading, getCourses };
+  return { courses, loading, getCourses, setCourses };
 };
