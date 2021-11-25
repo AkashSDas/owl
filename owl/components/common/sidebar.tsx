@@ -106,9 +106,7 @@ const SidebarButton = (props: SidebarButtonProps) => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    if (router.route === props.routePattern) {
-      setIsActive(true);
-    }
+    setIsActive(router.route === props.routePattern);
   }, [router.route]);
 
   return (
