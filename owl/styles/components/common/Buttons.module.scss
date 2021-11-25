@@ -26,3 +26,11 @@
   height: 38px;
   padding: 8px 16px 10px 16px;
 }
+
+.input-file-btn {
+  @apply bg-purple-light font-medium text-small text-purple rounded-full;
+  @include base-btn;
+  &:hover {
+    filter: brightness(0.85);
+  }
+}
