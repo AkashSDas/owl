@@ -34,8 +34,11 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
 
   return (
     <div
+      onClick={() => {
+        router.push(`/course/${course._id}/chapter`);
+      }}
       key={course._id}
-      className={`w-full space-x-3 flex ${cardstyle["card"]}`}
+      className={`w-full space-x-3 flex ${cardstyle["card"]} cursor-pointer`}
     >
       <img
         style={{ height: "180px", width: "300px" }}
@@ -86,6 +89,7 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
 
         <div className="flex item-center space-x-3">
           <button
+            style={{ zIndex: 2 }}
             className={btnStyle["secondary-btn"]}
             onClick={() => {
               if (loading) return toast("Wait", { icon: "⏰" });
