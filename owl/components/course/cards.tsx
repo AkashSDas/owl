@@ -1,8 +1,35 @@
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { Show, Star, TimeCircle } from "react-iconly";
+import { AuthContext } from "../../lib/context/user";
+import { deleteCourse } from "../../lib/helpers/course";
 import btnStyle from "../../styles/components/common/Buttons.module.scss";
 import cardstyle from "../../styles/components/course_cards/MyCourseCard.module.scss";
 
-export const MyCourseCard = ({ course }: any) => {
+export const MyCourseCard = ({ course, setCourses }: any) => {
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+
+  const courseDelete = async () => {
+    if (!user?.token) toast("You must be logged in", { icon: "❌" });
+
+    setLoading(true);
+    const [result, err] = await deleteCourse(
+      course._id,
+      user.data?._id,
+      user.token
+    );
+    if (err) toast(err.msg, { icon: "❌" });
+    else {
+      setCourses((courses: any) => ({
+        ...courses,
+        data: courses.data.filter((c: any) => c._id !== course._id),
+      }));
+      toast(result.msg, { icon: "✅" });
+    }
+    setLoading(false);
+  };
+
   return (
     <div
       key={course._id}
@@ -53,6 +80,26 @@ export const MyCourseCard = ({ course }: any) => {
           >
             Price is ${course.price}
           </div>
+        </div>
+
+        <div className="flex item-center space-x-3">
+          <button
+            className={btnStyle["secondary-btn"]}
+            onClick={() => {
+              if (loading) return toast("Wait", { icon: "⏰" });
+            }}
+          >
+            Update
+          </button>
+          <button
+            className={btnStyle["secondary-btn"]}
+            onClick={() => {
+              if (loading) return toast("Wait", { icon: "⏰" });
+              courseDelete();
+            }}
+          >
+            {loading ? "Loading..." : "Delete"}
+          </button>
         </div>
       </div>
     </div>
