@@ -57,7 +57,10 @@ export const lessonCreateFormCallback = async (
 
 /**
  * Callback function for formidable.IncomingForm.parse function which handles
- * this work of updating a course
+ * this work of updating a course.
+ *
+ * @todo
+ * - Update course updatedAt field after updating successfully
  */
 export const lessonUpdateFormCallback = async (
   req: Request,
