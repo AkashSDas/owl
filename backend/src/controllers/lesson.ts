@@ -63,6 +63,7 @@ export const updateLesson: Controller = async (req, res) => {
  * - Instead of getting entire lesson just get the lesson id with validation check of
  * that lesson existing and having belonging to course and chapter whose ids are given
  * in param
+ * - Update course updatedAt field after deleted successfully
  */
 export const deleteLesson: Controller = async (req, res) => {
   const lesson = req.lesson;
