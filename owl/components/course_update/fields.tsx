@@ -134,14 +134,12 @@ export const CoverImgField = () => {
   return (
     <div className="form-field w-full">
       <FormLabel text="Cover image" htmlFor="coverImg" />
-      {!coverImgFile ? (
-        <img
-          style={{ height: "400px" }}
-          className="w-full space-y-6 rounded-3xl object-cover"
-          src={coverImgURL}
-          alt="Cover image"
-        />
-      ) : null}
+      <img
+        style={{ height: "400px" }}
+        className="w-full space-y-6 rounded-3xl object-cover"
+        src={coverImgURL}
+        alt="Cover image"
+      />
       <label
         className={`${btnStyle["input-file-btn"]} mt-2 space-x-2 cursor-pointer`}
       >
