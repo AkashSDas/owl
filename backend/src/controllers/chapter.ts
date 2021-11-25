@@ -27,15 +27,15 @@ export const createChapter: Controller = async (req, res) => {
   const [exists, err1] = await runAsync(
     Course.findOne({ _id: courseId }, "_id").exec()
   );
-  if (err1) return responseMsg(err1, { msg: responseMsgs.WENT_WRONG });
-  if (!exists) return responseMsg(err1, { msg: "Course doesn't exists" });
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!exists) return responseMsg(res, { msg: "Course doesn't exists" });
 
   // Create chapter for the given course
   const [chapter, err2] = await runAsync(
     new Chapter({ courseId, ...req.body }).save()
   );
   if (err2 || !chapter)
-    return responseMsg(err1, { msg: responseMsgs.WENT_WRONG });
+    return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
   return responseMsg(res, {
     status: 200,
     error: false,
@@ -119,5 +119,23 @@ export const deleteChapter: Controller = async (req, res) => {
     status: 200,
     error: false,
     msg: "Successfully deleted the chapter",
+  });
+};
+
+/**
+ * Get all chapters of a course
+ */
+export const getAllChaptersOfCourse: Controller = async (req, res) => {
+  const courseId = req.params.courseId;
+  const [data, err] = await runAsync(
+    Chapter.find({ courseId: courseId as any }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved all the chapters",
+    data: { chapters: data ? data : [] },
   });
 };
