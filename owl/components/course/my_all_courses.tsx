@@ -5,7 +5,7 @@ import { TextRoll } from "../text_roll/animation";
 import { MyCourseCard } from "./cards";
 
 export const MyAllCourses = () => {
-  const { loading, courses, getCourses } = useUserAllCourses(1);
+  const { loading, courses, getCourses, setCourses } = useUserAllCourses(1);
 
   const loadMoreBtn = () => {
     if (courses.hasNext) {
@@ -30,7 +30,7 @@ export const MyAllCourses = () => {
       {courses.data &&
         courses.data.map((c) => (
           <>
-            <MyCourseCard course={c} />
+            <MyCourseCard course={c} setCourses={setCourses} />
             <Divider />
           </>
         ))}
