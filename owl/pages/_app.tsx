@@ -11,6 +11,8 @@ import { AuthProvider } from "../components/auth/auth_provider";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { BaseSidebar } from "../components/common/sidebar";
+import { useState } from "react";
+import { CourseEditorSidebarContext } from "../lib/context/sidebar";
 
 /**
  * @remarks
@@ -25,6 +27,11 @@ const MyApp = ({ Component, pageProps, router }) => {
     pageExit: { y: "-100vh", opacity: 0, skewY: "7deg" },
   };
 
+  const [sidebar, setSidebar] = useState({
+    courseId: null,
+    chapterId: null,
+  });
+
   return (
     <AuthProvider>
       <AuthWrapper>
@@ -34,23 +41,27 @@ const MyApp = ({ Component, pageProps, router }) => {
             size="medium"
             primaryColor="hsla(0, 0%, 0%, 0.5)"
           >
-            <Navbar />
-            <BaseSidebar />
-            <AnimatePresence initial={false} exitBeforeEnter={true}>
-              <motion.div
-                key={router.route}
-                initial="pageInitial"
-                animate="pageAnimate"
-                exit="pageExit"
-                variants={slideAnimation}
-                transition={{ type: "tween", ease: "easeOut", duration: 0.5 }}
-              >
-                <SkewScrollingAnimation>
-                  <Component {...pageProps} />
-                </SkewScrollingAnimation>
-              </motion.div>
-            </AnimatePresence>
-            <Toaster />
+            <CourseEditorSidebarContext.Provider
+              value={{ sidebar, setSidebar }}
+            >
+              <Navbar />
+              <BaseSidebar />
+              <AnimatePresence initial={false} exitBeforeEnter={true}>
+                <motion.div
+                  key={router.route}
+                  initial="pageInitial"
+                  animate="pageAnimate"
+                  exit="pageExit"
+                  variants={slideAnimation}
+                  transition={{ type: "tween", ease: "easeOut", duration: 0.5 }}
+                >
+                  <SkewScrollingAnimation>
+                    <Component {...pageProps} />
+                  </SkewScrollingAnimation>
+                </motion.div>
+              </AnimatePresence>
+              <Toaster />
+            </CourseEditorSidebarContext.Provider>
           </IconlyProvider>
         </CursorProvider>
       </AuthWrapper>
