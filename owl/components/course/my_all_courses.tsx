@@ -1,6 +1,7 @@
 import { useUserAllCourses } from "../../lib/hooks/user_courses";
 import btnStyle from "../../styles/components/common/Buttons.module.scss";
 import { Divider } from "../common/divider";
+import { TextRoll } from "../text_roll/animation";
 import { MyCourseCard } from "./cards";
 
 export const MyAllCourses = () => {
@@ -9,22 +10,15 @@ export const MyAllCourses = () => {
   const loadMoreBtn = () => {
     if (courses.hasNext) {
       return (
-        <button
-          style={{ color: "hsla(0, 0%, 0%, 1)" }}
-          className={btnStyle["regular-btn"]}
-          onClick={getCourses}
-        >
-          Load more
+        <button className={btnStyle["regular-btn"]} onClick={getCourses}>
+          <TextRoll text="Load more" color="hsla(0, 0%, 0%, 1)" />
         </button>
       );
     }
 
     return (
-      <div
-        style={{ color: "hsla(0, 0%, 0%, 1)", cursor: "unset" }}
-        className={`${btnStyle["regular-btn"]}`}
-      >
-        You've reached the end
+      <div style={{ cursor: "unset" }} className={`${btnStyle["regular-btn"]}`}>
+        <TextRoll text="You've reached the end" color="hsla(0, 0%, 0%, 1)" />
       </div>
     );
   };
