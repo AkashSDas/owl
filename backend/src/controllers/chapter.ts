@@ -56,6 +56,9 @@ export const createChapter: Controller = async (req, res) => {
  *
  * Use this controller in conjunction with
  * - getChapterById which will set `req.chapter`
+ *
+ * @todo
+ * - Update course updatedAt field after updated successfully
  */
 export const updateChapter: Controller = async (req, res) => {
   let chapter = req.chapter;
@@ -83,6 +86,7 @@ export const updateChapter: Controller = async (req, res) => {
  * @todo
  * - Instead of getting entire chapter just get the chapter id with validation check of
  * that chapter existing and having belonging to course whose id is given in param
+ * - Update course updatedAt field after deleted successfully
  */
 export const deleteChapter: Controller = async (req, res) => {
   const chapter = req.chapter;
