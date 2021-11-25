@@ -15,4 +15,6 @@ export const useCourseIdForSidebar = () => {
   useEffect(() => {
     if (courseId) setSidebar((s) => ({ ...s, courseId }));
   }, [courseId]);
+
+  return { courseId };
 };
