@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Show, Star, TimeCircle } from "react-iconly";
@@ -8,6 +9,7 @@ import cardstyle from "../../styles/components/course_cards/MyCourseCard.module.
 
 export const MyCourseCard = ({ course, setCourses }: any) => {
   const { user } = useContext(AuthContext);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const courseDelete = async () => {
@@ -87,6 +89,7 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
             className={btnStyle["secondary-btn"]}
             onClick={() => {
               if (loading) return toast("Wait", { icon: "⏰" });
+              router.push(`/course/update/${course._id}`);
             }}
           >
             Update
