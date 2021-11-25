@@ -343,3 +343,36 @@ export const getUserAllCourses: Controller = async (req, res) => {
     },
   });
 };
+
+/**
+ * Get inidividual course public date
+ *
+ * @remarks
+ *
+ * Course public data which can be updated are
+ * - name
+ * - description
+ * - coverImgURL (client gives coverImg which is a img file, which saved in firebase and then coverImgURL is updated with new url)
+ * - price
+ * - level
+ */
+export const getCoursePublicData: Controller = async (req, res) => {
+  const courseId = req.params.courseMongoId;
+  const [course, err] = await runAsync(
+    Course.findOne(
+      { _id: courseId as any },
+      "_id name description price level coverImgURL"
+    )
+      .populate("level")
+      .exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!course) return responseMsg(res, { msg: "Course doesn't exists" });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Course public info",
+    data: { course },
+  });
+};
