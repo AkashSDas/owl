@@ -7,3 +7,13 @@ export const Loader = () => (
     ></div>
   </div>
 );
+
+export const SmallPrimaryLoader = () => {
+  return (
+    <div className="w-6 h-6 flex justify-center items-center">
+      <div
+        className={`${loader["loader"]} ease-linear rounded-full border-2 border-t-2 border-purple-light h-6 w-6`}
+      ></div>
+    </div>
+  );
+};
