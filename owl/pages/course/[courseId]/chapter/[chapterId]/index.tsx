@@ -1,5 +1,6 @@
 import { useRouter } from "next/dist/client/router";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { Delete } from "react-iconly";
 import { Divider } from "../../../../../components/common/divider";
 import {
@@ -8,6 +9,7 @@ import {
 } from "../../../../../components/common/loader";
 import { CourseEditorSidebarContext } from "../../../../../lib/context/sidebar";
 import { AuthContext } from "../../../../../lib/context/user";
+import { deleteLesson } from "../../../../../lib/helpers/lesson";
 import { useLessonsOfChapter } from "../../../../../lib/hooks/lesson";
 import {
   useChapterIdForSidebar,
@@ -66,8 +68,34 @@ const Lessons = ({ lessons, setLessons }) => {
   const [loading, setLoading] = useState(false);
   const [cardLoading, setCardLoading] = useState({
     loading: false,
-    chapterId: "",
+    lessonId: "",
   });
+
+  const deleteThisLesson = async (lessonId: string) => {
+    if (loading) return;
+    if (!user) return toast("You must be logged", { icon: "❌" });
+    if (!sidebar.courseId || !sidebar.chapterId)
+      return toast("Something went wrong, Please try again", {
+        icon: "❌",
+      });
+
+    setCardLoading({ loading: true, lessonId: lessonId });
+    setLoading(() => true);
+    const [data, err] = await deleteLesson(
+      sidebar.courseId,
+      sidebar.chapterId,
+      lessonId,
+      user.data?._id,
+      user.token
+    );
+    if (err) toast(err.msg, { icon: "❌" });
+    else {
+      setLessons((less: any) => less.filter((l) => l._id !== lessonId));
+      toast(data.msg, { icon: "✅" });
+    }
+    setCardLoading({ loading: false, lessonId: "" });
+    setLoading(() => false);
+  };
 
   return (
     <div className="bg-grey1 rounded-xl w-full">
@@ -78,12 +106,20 @@ const Lessons = ({ lessons, setLessons }) => {
         >
           <div>🎪</div>
           <div className="w-full">{l.name}</div>
-          <div onClick={() => {}}>
-            {cardLoading.loading && cardLoading.chapterId === l._id ? (
-              <SmallPrimaryLoader />
-            ) : (
-              <Delete />
-            )}
+          <div
+            onClick={() => {
+              // if (sidebar.courseId && sidebar.chapterId) {
+              //   router.push(`/course/${sidebar.courseId}/chapter/${c._id}`);
+              // }
+            }}
+          >
+            <div onClick={() => deleteThisLesson(l._id)}>
+              {cardLoading.loading && cardLoading.lessonId === l._id ? (
+                <SmallPrimaryLoader />
+              ) : (
+                <Delete />
+              )}
+            </div>
           </div>
         </div>
       ))}
