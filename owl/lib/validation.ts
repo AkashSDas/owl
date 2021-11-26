@@ -43,3 +43,12 @@ export const chapterCreateValidationSchema = Yup.object().shape({
     .required("Description is required")
     .min(6, "Description should be atleast 6 characters long"),
 });
+
+export const lessonCreateValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .required("Chapter name is required")
+    .min(6, "Chapter name should be atleast 6 characters long"),
+  description: Yup.string()
+    .required("Description is required")
+    .min(6, "Description should be atleast 6 characters long"),
+});
