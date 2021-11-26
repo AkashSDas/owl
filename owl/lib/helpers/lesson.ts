@@ -82,3 +82,36 @@ export const getLesson = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Update lesson
+ */
+export const updateLesson = async (
+  courseId: string,
+  chapterId: string,
+  lessonId: string,
+  data: any,
+  userId: string,
+  token: string
+) => {
+  // Formdata
+  const formData = new FormData();
+  for (const field in data) {
+    formData.append(field, data[field]);
+  }
+
+  const api = axiosBaseInstance();
+
+  const [result, err] = await runAsync(
+    api(`/lesson/${userId}/${courseId}/${chapterId}/${lessonId}`, {
+      method: "PUT",
+      data: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  );
+
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
