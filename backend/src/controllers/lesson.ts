@@ -124,7 +124,7 @@ export const getLesson: Controller = async (req, res) => {
   return responseMsg(res, {
     status: 200,
     error: false,
-    msg: "Successfully retrieved all the chapters",
+    msg: "Successfully retrieved lesson",
     data: { lesson: data },
   });
 };
