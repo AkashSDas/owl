@@ -101,7 +101,12 @@ const Chapters = ({
         >
           <div>🎪</div>
           <div className="w-full">{c.name}</div>
-          <div onClick={() => deleteThisChapter(c._id)}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteThisChapter(c._id);
+            }}
+          >
             {cardLoading.loading && cardLoading.chapterId === c._id ? (
               <SmallPrimaryLoader />
             ) : (

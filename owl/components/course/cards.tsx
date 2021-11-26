@@ -91,7 +91,8 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
           <button
             style={{ zIndex: 2 }}
             className={btnStyle["secondary-btn"]}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (loading) return toast("Wait", { icon: "⏰" });
               router.push(`/course/${course._id}/update`);
             }}
@@ -100,7 +101,8 @@ export const MyCourseCard = ({ course, setCourses }: any) => {
           </button>
           <button
             className={btnStyle["secondary-btn"]}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (loading) return toast("Wait", { icon: "⏰" });
               courseDelete();
             }}

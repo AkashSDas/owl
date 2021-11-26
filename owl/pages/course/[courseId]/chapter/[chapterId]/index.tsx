@@ -122,7 +122,12 @@ const Lessons = ({ lessons, setLessons }) => {
         >
           <div>🎪</div>
           <div className="w-full">{l.name}</div>
-          <div onClick={() => deleteThisLesson(l._id)}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteThisLesson(l._id);
+            }}
+          >
             {cardLoading.loading && cardLoading.lessonId === l._id ? (
               <SmallPrimaryLoader />
             ) : (
