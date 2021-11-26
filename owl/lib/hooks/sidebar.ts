@@ -35,3 +35,20 @@ export const useChapterIdForSidebar = () => {
 
   return { chapterId };
 };
+
+/**
+ * @remarks
+ * Use this in every page where you want CourseEditorSidebarContext
+ * to be available
+ */
+export const useLessonIdForSidebar = () => {
+  const router = useRouter();
+  const { lessonId } = router.query;
+  const { setSidebar } = useContext(CourseEditorSidebarContext);
+
+  useEffect(() => {
+    if (lessonId) setSidebar((s) => ({ ...s, lessonId }));
+  }, [lessonId]);
+
+  return { lessonId };
+};
