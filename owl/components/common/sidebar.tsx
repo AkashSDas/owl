@@ -13,6 +13,7 @@ export const BaseSidebar = () => {
     "/course/[courseId]/chapter",
     "/course/[courseId]/chapter/create",
     "/course/[courseId]/chapter/[chapterId]",
+    "/course/[courseId]/chapter/[chapterId]/update",
     "/course/[courseId]/chapter/[chapterId]/lesson/create",
     "/course/[courseId]/chapter/[chapterId]/lesson/[lessonId]",
   ];
