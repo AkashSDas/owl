@@ -11,6 +11,7 @@ import {
   lessonCreateFormCallback,
   lessonUpdateFormCallback,
 } from "../helpers/lesson";
+import Lesson from "../models/lesson";
 
 /**
  * Create a lesson
@@ -80,5 +81,24 @@ export const deleteLesson: Controller = async (req, res) => {
     status: 200,
     error: false,
     msg: "Successfully deleted the lesson",
+  });
+};
+
+/**
+ * Get all lessons of a chapter
+ */
+export const getAllLessonsOfChapter: Controller = async (req, res) => {
+  const courseId = req.params.courseId;
+  const chapter = req.chapter;
+  const [data, err] = await runAsync(
+    Lesson.find({ courseId: courseId as any, chapterId: chapter._id }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved all the lessons",
+    data: { chapter, lessons: data ? data : [] },
   });
 };
