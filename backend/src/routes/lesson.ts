@@ -6,9 +6,11 @@ import { Router } from "express";
 import {
   createLesson,
   deleteLesson,
+  getAllLessonsOfChapter,
   updateLesson,
 } from "../controllers/lesson";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
+import { getChapterById } from "../middlewares/chapter";
 import { getLessonById } from "../middlewares/lesson";
 import { getUserById, isTeacher } from "../middlewares/user";
 
@@ -19,10 +21,14 @@ export const router = Router();
  */
 router.param("userId", getUserById);
 router.param("lessonId", getLessonById);
+router.param("chapterMongoId", getChapterById);
 
 /**
  * Routes
  */
+
+// Get all lessons of a chapter
+router.get("/:courseId/:chapterMongoId", getAllLessonsOfChapter);
 
 // Create lesson if requested by a teacher
 // TODO: add some validation checks on req.body
