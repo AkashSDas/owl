@@ -102,3 +102,29 @@ export const getAllLessonsOfChapter: Controller = async (req, res) => {
     data: { chapter, lessons: data ? data : [] },
   });
 };
+
+/**
+ * Get lesson
+ */
+export const getLesson: Controller = async (req, res) => {
+  const courseId = req.params.courseId;
+  const chapterId = req.params.chapterId;
+  const lessonId = req.params.lessonMongoId;
+
+  const [data, err] = await runAsync(
+    Lesson.findOne({
+      _id: lessonId as any,
+      chapterId: chapterId as any,
+      courseId: courseId as any,
+    }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!data) return responseMsg(res, { msg: "Lesson does not exists" });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved all the chapters",
+    data: { lesson: data },
+  });
+};
