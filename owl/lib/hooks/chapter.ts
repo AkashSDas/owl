@@ -20,5 +20,5 @@ export const useChaptersOfCourse = (courseId: string) => {
     apiCall();
   }, [courseId]);
 
-  return { loading, chapters };
+  return { loading, chapters, setChapters };
 };
