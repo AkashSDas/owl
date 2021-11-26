@@ -8,6 +8,7 @@ import {
   updateChapter,
   deleteChapter,
   getAllChaptersOfCourse,
+  getChapter,
 } from "../controllers/chapter";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
 import { getUserById, isTeacher } from "../middlewares/user";
@@ -29,6 +30,9 @@ router.param("chapterId", getChapterById);
 
 // Get all chapters for a course
 router.get("/:courseId", getAllChaptersOfCourse);
+
+// Get a chapter
+router.get("/:courseId/:chapterMongoId", getChapter);
 
 // Create a chapter if requested by a teacher
 router.post(
