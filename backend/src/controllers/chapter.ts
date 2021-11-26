@@ -139,3 +139,23 @@ export const getAllChaptersOfCourse: Controller = async (req, res) => {
     data: { chapters: data ? data : [] },
   });
 };
+
+/**
+ * Get chapter data
+ */
+export const getChapter: Controller = async (req, res) => {
+  const courseId = req.params.courseId;
+  const chapterId = req.params.chapterMongoId;
+  const [data, err] = await runAsync(
+    Chapter.findOne({ _id: chapterId as any, courseId: courseId as any }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!data) return responseMsg(res, { msg: "Chapter does not exists" });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved the chapter",
+    data: { chapter: data },
+  });
+};
