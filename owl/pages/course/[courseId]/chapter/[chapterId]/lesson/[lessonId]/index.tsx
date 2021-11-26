@@ -8,9 +8,9 @@ import {
   useCourseIdForSidebar,
   useLessonIdForSidebar,
 } from "../../../../../../../lib/hooks/sidebar";
+import btnStyles from "../../../../../../../styles/components/common/Buttons.module.scss";
 
 const Lesson = () => {
-  const router = useRouter();
   const { courseId } = useCourseIdForSidebar();
   const { chapterId } = useChapterIdForSidebar();
   const { lessonId } = useLessonIdForSidebar();
@@ -30,12 +30,28 @@ const Lesson = () => {
 };
 
 const LessonView = ({ lesson }) => {
+  const router = useRouter();
+  const { courseId } = useCourseIdForSidebar();
+  const { chapterId } = useChapterIdForSidebar();
+  const { lessonId } = useLessonIdForSidebar();
+
   return (
     <section className="mt-8 w-full space-y-4">
       <h1 className="text-desktop-h4 w-full">{lesson?.name ?? "No name"}</h1>
       <div className="text-tablet-body-main w-full font-medium text-grey3">
         {lesson?.description ?? "No description"}
       </div>
+      <button
+        onClick={() => {
+          if (courseId && chapterId && lessonId)
+            router.push(
+              `/course/${courseId}/chapter/${chapterId}/lesson/${lessonId}/update`
+            );
+        }}
+        className={btnStyles["secondary-btn"]}
+      >
+        Update lesson
+      </button>
       <Divider />
       <video
         style={{ height: "500px" }}
