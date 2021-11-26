@@ -12,6 +12,8 @@ export const BaseSidebar = () => {
   const routes2 = [
     "/course/[courseId]/chapter",
     "/course/[courseId]/chapter/create",
+    "/course/[courseId]/chapter/[chapterId]",
+    "/course/[courseId]/chapter/[chapterId]/lesson/create",
   ];
 
   const isSidebar1 = routes1.filter((r) => r === router.route).length !== 0;
