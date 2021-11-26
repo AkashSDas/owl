@@ -7,6 +7,7 @@ export interface ICourseEditorSidebarContext {
   sidebar: {
     chapterId: string;
     courseId: string;
+    lessonId: string;
   };
   setSidebar: Function;
 }
