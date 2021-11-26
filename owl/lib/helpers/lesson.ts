@@ -64,3 +64,21 @@ export const deleteLesson = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Get a lesson
+ */
+export const getLesson = async (
+  courseId: string,
+  chapterId: string,
+  lessonId: string
+) => {
+  const [result, err] = await fetchFromAPI(
+    `/lesson/${courseId}/${chapterId}/${lessonId}`,
+    {
+      method: "GET",
+    }
+  );
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
