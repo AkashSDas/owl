@@ -30,6 +30,7 @@ const MyApp = ({ Component, pageProps, router }) => {
   const [sidebar, setSidebar] = useState({
     courseId: null,
     chapterId: null,
+    lessonId: null,
   });
 
   return (
