@@ -37,7 +37,7 @@ const Chapter = () => {
           {chapterInfo ? chapterInfo.description : ""}
         </div>
         <Divider />
-        <div className="w-full flex items-center justify-start">
+        <div className="w-full flex items-center justify-start space-x-4">
           <button
             onClick={() => {
               if (courseId && chapterId)
@@ -48,6 +48,15 @@ const Chapter = () => {
             className={btnStyles["secondary-btn"]}
           >
             Create lesson
+          </button>
+          <button
+            onClick={() => {
+              if (courseId && chapterId)
+                router.push(`/course/${courseId}/chapter/${chapterId}/update`);
+            }}
+            className={btnStyles["secondary-btn"]}
+          >
+            Update chapter
           </button>
         </div>
         <Divider />
