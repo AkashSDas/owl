@@ -1,16 +1,27 @@
 import { useRouter } from "next/dist/client/router";
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { Delete } from "react-iconly";
 import { Divider } from "../../../../components/common/divider";
-import { Loader } from "../../../../components/common/loader";
+import {
+  Loader,
+  SmallPrimaryLoader,
+} from "../../../../components/common/loader";
+import { CourseEditorSidebarContext } from "../../../../lib/context/sidebar";
+import { AuthContext } from "../../../../lib/context/user";
+import { deleteChapter } from "../../../../lib/helpers/chapter";
 import { useChaptersOfCourse } from "../../../../lib/hooks/chapter";
 import { useCourseIdForSidebar } from "../../../../lib/hooks/sidebar";
 import styles from "../../../../styles/components/chapter_cards/MyChapterCard.module.scss";
 import btnStyles from "../../../../styles/components/common/Buttons.module.scss";
+import loader from "../../../../styles/components/common/Loader.module.scss";
 
 const CourseChapters = () => {
   const router = useRouter();
   const { courseId } = useCourseIdForSidebar();
-  const { loading, chapters } = useChaptersOfCourse(courseId as string);
+  const { loading, chapters, setChapters } = useChaptersOfCourse(
+    courseId as string
+  );
 
   return (
     <main style={{ marginLeft: "250px" }} className="px-2">
@@ -26,13 +37,56 @@ const CourseChapters = () => {
           Create chapter
         </button>
         <Divider />
-        {loading ? <Loader /> : <Chapters chapters={chapters} />}
+        {loading ? (
+          <Loader />
+        ) : (
+          <Chapters chapters={chapters} setChapters={setChapters} />
+        )}
       </section>
     </main>
   );
 };
 
-const Chapters = ({ chapters }: { chapters: any[] }) => {
+const Chapters = ({
+  chapters,
+  setChapters,
+}: {
+  chapters: any[];
+  setChapters: any;
+}) => {
+  const { sidebar } = useContext(CourseEditorSidebarContext);
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [cardLoading, setCardLoading] = useState({
+    loading: false,
+    chapterId: "",
+  });
+
+  const deleteThisChapter = async (chapterId: string) => {
+    if (loading) return;
+    if (!user) return toast("You must be logged", { icon: "❌" });
+    if (!sidebar.courseId)
+      return toast("Something went wrong, Please try again", {
+        icon: "❌",
+      });
+
+    setCardLoading({ loading: true, chapterId: chapterId });
+    setLoading(() => true);
+    const [data, err] = await deleteChapter(
+      sidebar.courseId,
+      chapterId,
+      user.data?._id,
+      user.token
+    );
+    if (err) toast(err.msg, { icon: "❌" });
+    else {
+      setChapters((chaps: any) => chaps.filter((c) => c._id !== chapterId));
+      toast(data.msg, { icon: "✅" });
+    }
+    setCardLoading({ loading: false, chapterId: "" });
+    setLoading(() => false);
+  };
+
   return (
     <div className="bg-grey1 rounded-xl">
       {chapters.map((c) => (
@@ -42,7 +96,13 @@ const Chapters = ({ chapters }: { chapters: any[] }) => {
         >
           <div>🎪</div>
           <div className="w-full">{c.name}</div>
-          <Delete />
+          <div onClick={() => deleteThisChapter(c._id)}>
+            {cardLoading.loading && cardLoading.chapterId === c._id ? (
+              <SmallPrimaryLoader />
+            ) : (
+              <Delete />
+            )}
+          </div>
         </div>
       ))}
     </div>
