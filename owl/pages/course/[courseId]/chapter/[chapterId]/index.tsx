@@ -103,23 +103,22 @@ const Lessons = ({ lessons, setLessons }) => {
         <div
           key={l._id}
           className={`bg-grey1 rounded-xl p-4 flex items-center space-x-5 text-desktop-body-intro cursor-pointer ${styles["card"]}`}
+          onClick={() => {
+            if (sidebar.courseId && sidebar.chapterId) {
+              router.push(
+                `/course/${sidebar.courseId}/chapter/${sidebar.chapterId}/lesson/${l._id}`
+              );
+            }
+          }}
         >
           <div>🎪</div>
           <div className="w-full">{l.name}</div>
-          <div
-            onClick={() => {
-              // if (sidebar.courseId && sidebar.chapterId) {
-              //   router.push(`/course/${sidebar.courseId}/chapter/${c._id}`);
-              // }
-            }}
-          >
-            <div onClick={() => deleteThisLesson(l._id)}>
-              {cardLoading.loading && cardLoading.lessonId === l._id ? (
-                <SmallPrimaryLoader />
-              ) : (
-                <Delete />
-              )}
-            </div>
+          <div onClick={() => deleteThisLesson(l._id)}>
+            {cardLoading.loading && cardLoading.lessonId === l._id ? (
+              <SmallPrimaryLoader />
+            ) : (
+              <Delete />
+            )}
           </div>
         </div>
       ))}
