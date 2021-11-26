@@ -30,3 +30,20 @@ export const createChapter = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Delete a chapter
+ */
+export const deleteChapter = async (
+  courseId: string,
+  chapterId: string,
+  userId: string,
+  token: string
+) => {
+  const [result, err] = await fetchFromAPI(
+    `/chapter/${userId}/${courseId}/${chapterId}`,
+    { method: "DELETE", token }
+  );
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
