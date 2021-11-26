@@ -14,7 +14,6 @@ import { useChaptersOfCourse } from "../../../../lib/hooks/chapter";
 import { useCourseIdForSidebar } from "../../../../lib/hooks/sidebar";
 import styles from "../../../../styles/components/chapter_cards/MyChapterCard.module.scss";
 import btnStyles from "../../../../styles/components/common/Buttons.module.scss";
-import loader from "../../../../styles/components/common/Loader.module.scss";
 
 const CourseChapters = () => {
   const router = useRouter();
@@ -54,6 +53,7 @@ const Chapters = ({
   chapters: any[];
   setChapters: any;
 }) => {
+  const router = useRouter();
   const { sidebar } = useContext(CourseEditorSidebarContext);
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -93,6 +93,11 @@ const Chapters = ({
         <div
           key={c._id}
           className={`bg-grey1 rounded-xl p-4 flex items-center space-x-5 text-desktop-body-intro cursor-pointer ${styles["card"]}`}
+          onClick={() => {
+            if (sidebar.courseId) {
+              router.push(`/course/${sidebar.courseId}/chapter/${c._id}`);
+            }
+          }}
         >
           <div>🎪</div>
           <div className="w-full">{c.name}</div>
