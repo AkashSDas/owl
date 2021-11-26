@@ -46,3 +46,21 @@ export const createLesson = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Delete a lesson
+ */
+export const deleteLesson = async (
+  courseId: string,
+  chapterId: string,
+  lessonId: string,
+  userId: string,
+  token: string
+) => {
+  const [result, err] = await fetchFromAPI(
+    `/lesson/${userId}/${courseId}/${chapterId}/${lessonId}`,
+    { method: "DELETE", token }
+  );
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
