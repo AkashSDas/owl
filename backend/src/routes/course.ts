@@ -7,6 +7,7 @@ import {
   createCourse,
   deleteCourse,
   getCourse,
+  getCourseChaptersAndLessonsOverview,
   getCoursePublicData,
   getUserAllCourses,
   publishCourse,
@@ -39,6 +40,12 @@ router.get("/:courseMongoId/public", getCoursePublicData);
 
 // Get course
 router.get("/:courseId", getCourse);
+
+// Get course chapters and lessons overview
+router.get(
+  "/:courseMongoId/chapters-and-lessons-overview",
+  getCourseChaptersAndLessonsOverview
+);
 
 // Create course when requested by a teacher
 router.post(
