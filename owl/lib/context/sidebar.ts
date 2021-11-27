@@ -14,3 +14,18 @@ export interface ICourseEditorSidebarContext {
 
 export const CourseEditorSidebarContext =
   createContext<ICourseEditorSidebarContext>(null);
+
+/**
+ * Sidebar 3 context
+ */
+export interface ISidebar3Context {
+  sidebar: {
+    nextLessonId?: string;
+    previousLessonId?: string;
+    currentLessonId: string;
+    lessons: any[];
+  };
+  setSidebar: Function;
+}
+
+export const Sidebar3Context = createContext<ISidebar3Context>(null);
