@@ -199,7 +199,7 @@ const Overview = ({ overview }) => {
                   {l.description}
                 </div>
               </div>
-              <div className="bg-grey2 text-grey3 px-3 py-2 rounded-full text-small font-bold group-hover:bg-grey1 group-hover:opacity-60 group-hover:text-grey4">
+              <div className="bg-grey2 text-grey3 px-3 py-2 rounded-full text-small font-bold group-hover:bg-grey0 group-hover:opacity-60 group-hover:text-grey4">
                 {l.videoDuration}
               </div>
             </div>

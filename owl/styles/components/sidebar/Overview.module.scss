@@ -1,13 +1,5 @@
 .overview-lesson-card {
   &:hover {
     background-color: hsla(265, 100%, 59%, 1);
-
-    .name {
-      color: white;
-    }
-
-    .description {
-      color: grey;
-    }
   }
 }
