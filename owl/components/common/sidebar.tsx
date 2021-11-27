@@ -17,6 +17,7 @@ export const BaseSidebar = () => {
     "/course/[courseId]/chapter/[chapterId]/lesson/create",
     "/course/[courseId]/chapter/[chapterId]/lesson/[lessonId]",
     "/course/[courseId]/chapter/[chapterId]/lesson/[lessonId]/update",
+    "/course/[courseId]",
   ];
 
   const isSidebar1 = routes1.filter((r) => r === router.route).length !== 0;
@@ -76,10 +77,18 @@ const Sidebar2 = () => {
       className={`bg-grey1 h-screen fixed flex flex-col p-4 ${sidebarStyle["sidebar"]}`}
     >
       <SidebarButton
-        icon={<Play primaryColor={false ? "white" : "hsla(0, 0%, 19%, 1)"} />}
+        icon={
+          <Play
+            primaryColor={
+              router.route === "/course/[courseId]"
+                ? "white"
+                : "hsla(0, 0%, 19%, 1)"
+            }
+          />
+        }
         text="Course Look"
-        routePattern="/no-match"
-        route="#"
+        routePattern="/course/[courseId]"
+        route={sidebar.courseId ? `/course/${sidebar.courseId}` : "#"}
       />
       <SidebarButton
         icon={
