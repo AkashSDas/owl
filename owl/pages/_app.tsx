@@ -12,7 +12,10 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { BaseSidebar } from "../components/common/sidebar";
 import { useState } from "react";
-import { CourseEditorSidebarContext } from "../lib/context/sidebar";
+import {
+  CourseEditorSidebarContext,
+  Sidebar3Context,
+} from "../lib/context/sidebar";
 
 /**
  * @remarks
@@ -33,6 +36,13 @@ const MyApp = ({ Component, pageProps, router }) => {
     lessonId: null,
   });
 
+  const [sidebar3, setSidebar3] = useState({
+    nextLessonId: null,
+    chapterLessonId: null,
+    currentLessonId: null,
+    lessons: [],
+  });
+
   return (
     <AuthProvider>
       <AuthWrapper>
@@ -45,23 +55,31 @@ const MyApp = ({ Component, pageProps, router }) => {
             <CourseEditorSidebarContext.Provider
               value={{ sidebar, setSidebar }}
             >
-              <Navbar />
-              <BaseSidebar />
-              <AnimatePresence initial={false} exitBeforeEnter={true}>
-                <motion.div
-                  key={router.route}
-                  initial="pageInitial"
-                  animate="pageAnimate"
-                  exit="pageExit"
-                  variants={slideAnimation}
-                  transition={{ type: "tween", ease: "easeOut", duration: 0.5 }}
-                >
-                  <SkewScrollingAnimation>
-                    <Component {...pageProps} />
-                  </SkewScrollingAnimation>
-                </motion.div>
-              </AnimatePresence>
-              <Toaster />
+              <Sidebar3Context.Provider
+                value={{ sidebar: sidebar3, setSidebar: setSidebar3 }}
+              >
+                <Navbar />
+                <BaseSidebar />
+                <AnimatePresence initial={false} exitBeforeEnter={true}>
+                  <motion.div
+                    key={router.route}
+                    initial="pageInitial"
+                    animate="pageAnimate"
+                    exit="pageExit"
+                    variants={slideAnimation}
+                    transition={{
+                      type: "tween",
+                      ease: "easeOut",
+                      duration: 0.5,
+                    }}
+                  >
+                    <SkewScrollingAnimation>
+                      <Component {...pageProps} />
+                    </SkewScrollingAnimation>
+                  </motion.div>
+                </AnimatePresence>
+                <Toaster />
+              </Sidebar3Context.Provider>
             </CourseEditorSidebarContext.Provider>
           </IconlyProvider>
         </CursorProvider>
