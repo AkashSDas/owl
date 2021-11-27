@@ -6,6 +6,7 @@ import { Router } from "express";
 import {
   createCourse,
   deleteCourse,
+  getCourse,
   getCoursePublicData,
   getUserAllCourses,
   publishCourse,
@@ -35,6 +36,9 @@ router.param("courseId", getCourseById);
 
 // Get course public data
 router.get("/:courseMongoId/public", getCoursePublicData);
+
+// Get course
+router.get("/:courseId", getCourse);
 
 // Create course when requested by a teacher
 router.post(
