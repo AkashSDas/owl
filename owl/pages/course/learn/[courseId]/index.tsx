@@ -17,6 +17,9 @@ import tagStyle from "../../../../styles/components/common/Buttons.module.scss";
 import styles from "../../../../styles/components/chapter_cards/MyChapterCard.module.scss";
 import { Show, Star, TimeCircle } from "react-iconly";
 import { getCourse } from "../../../../lib/helpers/course";
+import { useContext } from "react";
+import { Sidebar3Context } from "../../../../lib/context/sidebar";
+import { useRouter } from "next/dist/client/router";
 
 const CourseLearnPage = ({ course, err }) => {
   useCourseIdForSidebar();
@@ -38,6 +41,8 @@ const CourseLearnPage = ({ course, err }) => {
 
 const CourseView = ({ courseData }) => {
   const { course, chapters } = courseData;
+  const { setSidebar } = useContext(Sidebar3Context);
+  const router = useRouter();
 
   return (
     <div className="space-y-3 w-4/5">
@@ -80,7 +85,7 @@ const CourseView = ({ courseData }) => {
         <h4 className="text-tablet-h4 text-center w-full mb-4">Chapters</h4>
 
         <div className="space-y-8">
-          {chapters.map((c) => (
+          {(chapters as any[]).map((c, idx) => (
             <div className="flex flex-col space-y-3">
               <h4 className="text-tablet-h4 w-full">{c.chapter.name}</h4>
 
@@ -88,6 +93,19 @@ const CourseView = ({ courseData }) => {
                 {c.lessons.map((l) => (
                   <div
                     className={`bg-grey1 rounded-xl p-4 flex items-center space-x-5 text-desktop-body-intro cursor-pointer ${styles["card"]}`}
+                    onClick={() => {
+                      setSidebar((s) => ({
+                        ...s,
+                        currentLessonId: l._id,
+                        nextLessonId:
+                          c.lessons.length > idx + 1
+                            ? c.lessons[idx + 1]._id
+                            : null,
+                        previousLessonId:
+                          idx - 1 >= 0 ? c.lessons[idx - 1]._id : null,
+                      }));
+                      router.push(`/course/learn/${course._id}/${l._id}`);
+                    }}
                   >
                     <div>🎪</div>
                     <div className="w-full">{l.name}</div>
