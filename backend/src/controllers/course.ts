@@ -11,7 +11,6 @@ import UserPurchase from "../models/user_purchase";
 import MongoPaging from "mongo-cursor-pagination";
 import Teacher from "../models/teacher";
 import Feedback from "../models/feedback";
-import User from "../models/user";
 
 /**
  * Create course
@@ -453,6 +452,54 @@ export const getCourse: Controller = async (req, res) => {
     msg: "Successfully retrieved course",
     data: {
       course: { ...courseData, ratings, duration },
+      chapters: chapterData,
+    },
+  });
+};
+
+/**
+ * Get course chapters and lessons overview
+ */
+export const getCourseChaptersAndLessonsOverview: Controller = async (
+  req,
+  res
+) => {
+  const courseId = req.params.courseMongoId;
+
+  // Get all chapters
+  const [chapters, err1] = await runAsync(
+    Chapter.find({ courseId: courseId as any }).exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  // Course having no chapters (while in draft)
+  if (!chapters)
+    return responseMsg(res, {
+      status: 200,
+      error: false,
+      msg: "Course has no chapters",
+      data: { chapters: [] },
+    });
+
+  // Getting lessons for the chapters
+  let chapterData = [];
+  for (let i = 0; i < chapters.length; i++) {
+    const chapter = chapters[i];
+    const [lessons, err2] = await runAsync(
+      Lesson.find(
+        { courseId: courseId as any, chapterId: chapter._id },
+        "_id name description videoDuration"
+      ).exec()
+    );
+    if (err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+    chapterData.push({ chapter, lessons: lessons ? lessons : [] });
+  }
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved course",
+    data: {
       chapters: chapterData,
     },
   });
