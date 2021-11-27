@@ -8,6 +8,7 @@ import {
   deleteLesson,
   getAllLessonsOfChapter,
   getLesson,
+  getLessonDirectly,
   updateLesson,
 } from "../controllers/lesson";
 import { isAuthenticated, isLoggedIn } from "../middlewares/auth";
@@ -33,6 +34,9 @@ router.get("/:courseId/:chapterMongoId", getAllLessonsOfChapter);
 
 // Get a lessons
 router.get("/:courseId/:chapterId/:lessonMongoId", getLesson);
+
+// Get a lessons directly
+router.get("/:lessonMongoId", getLessonDirectly);
 
 // Create lesson if requested by a teacher
 // TODO: add some validation checks on req.body
