@@ -93,3 +93,14 @@ export const updateCoursePublicData = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Get course
+ */
+export const getCourse = async (courseId: string) => {
+  const [result, err] = await fetchFromAPI(`/course/${courseId}`, {
+    method: "GET",
+  });
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
