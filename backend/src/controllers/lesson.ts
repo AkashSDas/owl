@@ -128,3 +128,23 @@ export const getLesson: Controller = async (req, res) => {
     data: { lesson: data },
   });
 };
+
+/**
+ * Get lesson directly just using lessonId
+ */
+export const getLessonDirectly: Controller = async (req, res) => {
+  const lessonId = req.params.lessonMongoId;
+
+  const [data, err] = await runAsync(
+    Lesson.findOne({ _id: lessonId as any }).exec()
+  );
+
+  if (err) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  if (!data) return responseMsg(res, { msg: "Lesson does not exists" });
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved lesson",
+    data: { lesson: data },
+  });
+};
