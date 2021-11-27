@@ -38,7 +38,7 @@ const MyApp = ({ Component, pageProps, router }) => {
 
   const [sidebar3, setSidebar3] = useState({
     nextLessonId: null,
-    chapterLessonId: null,
+    previousLessonId: null,
     currentLessonId: null,
     lessons: [],
   });
