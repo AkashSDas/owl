@@ -1,5 +1,5 @@
 ![Owl](./docs/imgs/header.png)
-![Description]("./docs/imgs/project-description.png.png")
+![Description](./docs/imgs/project-description.png.png)
 ![Mockup](./docs/imgs/mockup.png)
 ![Display](./docs/imgs/display.png)
 ![Problems](./docs/imgs/problems.png)
