@@ -115,3 +115,14 @@ export const updateLesson = async (
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Get a lesson directly
+ */
+export const getLessonDirectly = async (lessonId: string) => {
+  const [result, err] = await fetchFromAPI(`/lesson/${lessonId}`, {
+    method: "GET",
+  });
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
