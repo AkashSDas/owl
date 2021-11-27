@@ -171,13 +171,14 @@ const Sidebar3 = () => {
       {loading || !courseId || !overview ? (
         <Loader />
       ) : (
-        <Overview overview={overview} />
+        <Overview overview={overview} courseId={courseId} />
       )}
     </div>
   );
 };
 
-const Overview = ({ overview }) => {
+const Overview = ({ overview, courseId }) => {
+  const router = useRouter();
   const { sidebar, setSidebar } = useContext(Sidebar3Context);
 
   useEffect(() => {
@@ -185,6 +186,7 @@ const Overview = ({ overview }) => {
     overview.chapters.forEach((c) => {
       lessons.push(...c.lessons);
     });
+
     setSidebar({ ...sidebar, lessons });
   }, [overview]);
 
@@ -206,6 +208,9 @@ const Overview = ({ overview }) => {
                   ? "bg-secondary hover:brightness-95"
                   : "hover:bg-purple-light"
               }`}
+              onClick={() => {
+                router.push(`/course/learn/${courseId}/${l._id}`);
+              }}
             >
               <div className="text-medium">💎</div>
               <div>
