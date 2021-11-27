@@ -11,6 +11,7 @@ import UserPurchase from "../models/user_purchase";
 import MongoPaging from "mongo-cursor-pagination";
 import Teacher from "../models/teacher";
 import Feedback from "../models/feedback";
+import User from "../models/user";
 
 /**
  * Create course
@@ -291,7 +292,7 @@ export const getUserAllCourses: Controller = async (req, res) => {
 
     // Get course rating
     const [ratingDocs, err2] = await runAsync(
-      Feedback.find({ userId: user._id, courseId: c._id }, "rating").exec()
+      Feedback.find({ courseId: c._id }, "rating").exec()
     );
     if (err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
     let ratings = 0;
@@ -310,8 +311,6 @@ export const getUserAllCourses: Controller = async (req, res) => {
       lessonDocs.forEach((l: any) => (duration = duration + l.videoDuration));
       duration = parseFloat((duration / lessonDocs.length).toFixed(2));
     }
-
-    console.log(duration, ratings);
 
     courses.push({
       _id: c._id,
@@ -374,5 +373,87 @@ export const getCoursePublicData: Controller = async (req, res) => {
     error: false,
     msg: "Course public info",
     data: { course },
+  });
+};
+
+/**
+ * Get entire course data
+ */
+export const getCourse: Controller = async (req, res) => {
+  let course = req.course;
+  const [_data, err0] = await runAsync(Course.populate(course, "level"));
+  if (err0 || !_data) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  const courseData = {
+    _id: _data._id,
+    teacherId: _data.teacherId,
+    name: _data.name,
+    description: _data.description,
+    coverImgURL: _data.coverImgURL,
+    price: _data.price,
+    published: _data.published,
+    level: _data.level,
+    createdAt: _data.createdAt,
+    updatedAt: _data.updatedAt,
+    numberOfStudentsEnrolled: _data.numberOfStudentsEnrolled,
+  };
+
+  // Get all chapters
+  const [chapters, err1] = await runAsync(
+    Chapter.find({ courseId: course._id }).exec()
+  );
+  if (err1) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+
+  // Get course rating
+  const [ratingDocs, err4] = await runAsync(
+    Feedback.find({ courseId: course._id }, "rating").exec()
+  );
+  if (err4) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  let ratings = 0;
+  if (ratingDocs && ratingDocs.length > 0) {
+    ratingDocs.forEach((r: any) => (ratings = ratings + r.rating));
+    ratings = parseFloat((ratings / ratingDocs.length).toFixed(2));
+  }
+
+  // Get course watch time (this can be optimized by just adding all the
+  // videoDuration in lesson docs retrived for each chapter below, for now
+  // just getting this separately)
+  const [lessonDocs, err3] = await runAsync(
+    Lesson.find({ courseId: course._id }, "videoDuration").exec()
+  );
+  if (err3) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+  let duration = 0;
+  if (lessonDocs && lessonDocs.length > 0) {
+    lessonDocs.forEach((l: any) => (duration = duration + l.videoDuration));
+    duration = parseFloat((duration / lessonDocs.length).toFixed(2));
+  }
+
+  // Course having no chapters (while in draft)
+  if (!chapters)
+    return responseMsg(res, {
+      status: 200,
+      error: false,
+      msg: "Successfully retrieved course",
+      data: { course: { ...courseData, ratings, duration }, chapters: [] },
+    });
+
+  // Getting lessons for the chapters
+  let chapterData = [];
+  for (let i = 0; i < chapters.length; i++) {
+    const chapter = chapters[i];
+    const [lessons, err2] = await runAsync(
+      Lesson.find({ courseId: course._id, chapterId: chapter._id }).exec()
+    );
+    if (err2) return responseMsg(res, { msg: responseMsgs.WENT_WRONG });
+    chapterData.push({ chapter, lessons: lessons ? lessons : [] });
+  }
+
+  return responseMsg(res, {
+    status: 200,
+    error: false,
+    msg: "Successfully retrieved course",
+    data: {
+      course: { ...courseData, ratings, duration },
+      chapters: chapterData,
+    },
   });
 };
