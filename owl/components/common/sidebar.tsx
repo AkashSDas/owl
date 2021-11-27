@@ -4,6 +4,9 @@ import btnStyle from "../../styles/components/sidebar/SidebarButton.module.scss"
 import sidebarStyle from "../../styles/components/sidebar/Sidebar.module.scss";
 import { useContext, useEffect, useState } from "react";
 import { CourseEditorSidebarContext } from "../../lib/context/sidebar";
+import { useCourseOverview } from "../../lib/hooks/sidebar";
+import { Loader } from "./loader";
+import overviewStyle from "../../styles/components/sidebar/Overview.module.scss";
 
 export const BaseSidebar = () => {
   const router = useRouter();
@@ -19,12 +22,15 @@ export const BaseSidebar = () => {
     "/course/[courseId]/chapter/[chapterId]/lesson/[lessonId]/update",
     "/course/[courseId]",
   ];
+  const route3 = ["/course/learn/[courseId]"];
 
   const isSidebar1 = routes1.filter((r) => r === router.route).length !== 0;
   const isSidebar2 = routes2.filter((r) => r === router.route).length !== 0;
+  const isSidebar3 = route3.filter((r) => r === router.route).length !== 0;
 
   if (isSidebar1) return <Sidebar1 />;
   if (isSidebar2) return <Sidebar2 />;
+  if (isSidebar3) return <Sidebar3 />;
 
   return null;
 };
@@ -135,5 +141,71 @@ const SidebarButton = (props: SidebarButtonProps) => {
         {props.text}
       </div>
     </button>
+  );
+};
+
+/**
+ * Sidebar 3
+ */
+
+const Sidebar3 = () => {
+  const { courseId, overview, loading } = useCourseOverview();
+
+  // Since we've top 72px we have to give to height as 100% minus 72px (since
+  // from top it is been translated by 72px). If this isn't done then in case of
+  // overlow in y then items at the end of overflow won't be scrollabled or displayed
+  // So that's why using height as calc(100% - translation from top in px i.e. 72px)
+  // which solves this issue.
+  //
+  // The solution came up observing the Chrome Inspector where while using 100% height
+  // the bottom position has -72px and from there it clicked to substract 72px from 100%
+  // height of the sidebar
+  return (
+    <div
+      style={{ width: "350px", top: "72px", height: "calc(100% - 72px)" }}
+      className={`bg-grey1 fixed flex flex-col overflow-y-scroll p-4 ${sidebarStyle["sidebar"]}`}
+    >
+      {loading || !courseId || !overview ? (
+        <Loader />
+      ) : (
+        <Overview overview={overview} />
+      )}
+    </div>
+  );
+};
+
+const Overview = ({ overview }) => {
+  return (
+    <div className="space-y-4">
+      {overview.chapters.map((c) => (
+        <div className="space-y-4">
+          <h4 className="text-mobile-h4">{c.chapter.name}</h4>
+          {c.lessons.length > 0 ? (
+            <div
+              style={{ borderWidth: "1px" }}
+              className="border-grey2 w-full"
+            ></div>
+          ) : null}
+          {c.lessons.map((l) => (
+            <div
+              className={`flex items-start p-2 rounded-2xl space-x-4 ${overviewStyle["overview-lesson-card"]} group cursor-pointer`}
+            >
+              <div className="text-medium">💎</div>
+              <div>
+                <div className="text-medium text-grey4 font-bold group-hover:text-grey0">
+                  {l.name}
+                </div>
+                <div className="text-small text-grey3 description group-hover:text-grey1 group-hover:opacity-60">
+                  {l.description}
+                </div>
+              </div>
+              <div className="bg-grey2 text-grey3 px-3 py-2 rounded-full text-small font-bold group-hover:bg-grey1 group-hover:opacity-60 group-hover:text-grey4">
+                {l.videoDuration}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
   );
 };
