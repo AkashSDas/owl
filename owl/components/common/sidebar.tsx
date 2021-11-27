@@ -25,7 +25,7 @@ export const BaseSidebar = () => {
     "/course/[courseId]/chapter/[chapterId]/lesson/[lessonId]/update",
     "/course/[courseId]",
   ];
-  const route3 = ["/course/learn/[courseId]"];
+  const route3 = ["/course/learn/[courseId]/[lessonId]"];
 
   const isSidebar1 = routes1.filter((r) => r === router.route).length !== 0;
   const isSidebar2 = routes2.filter((r) => r === router.route).length !== 0;
@@ -185,13 +185,7 @@ const Overview = ({ overview }) => {
     overview.chapters.forEach((c) => {
       lessons.push(...c.lessons);
     });
-
-    setSidebar({
-      ...sidebar,
-      currentLessonId: lessons.length > 0 ? lessons[0]._id : null,
-      nextLessonId: lessons.length > 1 ? lessons[1]._id : null,
-      lessons,
-    });
+    setSidebar({ ...sidebar, lessons });
   }, [overview]);
 
   return (
