@@ -3,7 +3,10 @@ import { Document, Folder, Play } from "react-iconly";
 import btnStyle from "../../styles/components/sidebar/SidebarButton.module.scss";
 import sidebarStyle from "../../styles/components/sidebar/Sidebar.module.scss";
 import { useContext, useEffect, useState } from "react";
-import { CourseEditorSidebarContext } from "../../lib/context/sidebar";
+import {
+  CourseEditorSidebarContext,
+  Sidebar3Context,
+} from "../../lib/context/sidebar";
 import { useCourseOverview } from "../../lib/hooks/sidebar";
 import { Loader } from "./loader";
 import overviewStyle from "../../styles/components/sidebar/Overview.module.scss";
@@ -175,6 +178,22 @@ const Sidebar3 = () => {
 };
 
 const Overview = ({ overview }) => {
+  const { sidebar, setSidebar } = useContext(Sidebar3Context);
+
+  useEffect(() => {
+    let lessons = [];
+    overview.chapters.forEach((c) => {
+      lessons.push(...c.lessons);
+    });
+
+    setSidebar({
+      ...sidebar,
+      currentLessonId: lessons.length > 0 ? lessons[0]._id : null,
+      nextLessonId: lessons.length > 1 ? lessons[1]._id : null,
+      lessons,
+    });
+  }, [overview]);
+
   return (
     <div className="space-y-4">
       {overview.chapters.map((c) => (
@@ -188,18 +207,40 @@ const Overview = ({ overview }) => {
           ) : null}
           {c.lessons.map((l) => (
             <div
-              className={`flex items-start p-2 rounded-2xl space-x-4 ${overviewStyle["overview-lesson-card"]} group cursor-pointer`}
+              className={`flex items-start p-2 rounded-2xl space-x-4 group cursor-pointer ${
+                sidebar.currentLessonId === l._id
+                  ? "bg-secondary hover:brightness-95"
+                  : "hover:bg-purple-light"
+              }`}
             >
               <div className="text-medium">💎</div>
               <div>
-                <div className="text-medium text-grey4 font-bold group-hover:text-grey0">
+                <div
+                  className={`text-medium font-bold ${
+                    sidebar.currentLessonId === l._id
+                      ? "text-grey0"
+                      : "text-grey4"
+                  }`}
+                >
                   {l.name}
                 </div>
-                <div className="text-small text-grey3 description group-hover:text-grey1 group-hover:opacity-60">
+                <div
+                  className={`text-small ${
+                    sidebar.currentLessonId === l._id
+                      ? "text-grey1 opacity-60"
+                      : "text-grey3"
+                  }`}
+                >
                   {l.description}
                 </div>
               </div>
-              <div className="bg-grey2 text-grey3 px-3 py-2 rounded-full text-small font-bold group-hover:bg-grey0 group-hover:opacity-60 group-hover:text-grey4">
+              <div
+                className={`px-3 py-2 rounded-full text-small font-bold ${
+                  sidebar.currentLessonId === l._id
+                    ? "bg-grey0 opacity-60 text-grey4"
+                    : "bg-grey2 text-grey3"
+                }`}
+              >
                 {l.videoDuration}
               </div>
             </div>
