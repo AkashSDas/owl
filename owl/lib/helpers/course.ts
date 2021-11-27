@@ -104,3 +104,15 @@ export const getCourse = async (courseId: string) => {
   if (err) return [null, err.response.data];
   return [result.data, null];
 };
+
+/**
+ * Get course overview
+ */
+export const getCourseChaptersAndLessonsOverview = async (courseId: string) => {
+  const [result, err] = await fetchFromAPI(
+    `/course/${courseId}/chapters-and-lessons-overview`,
+    { method: "GET" }
+  );
+  if (err) return [null, err.response.data];
+  return [result.data, null];
+};
