@@ -6,8 +6,7 @@ import { UserDocument } from "./user";
  * Model Purpose
  *
  * User model will have all the courses that the user pruchase.
- * Also one user will have extactly one unique UserPurchase doc which will be created
- * with the creation of that user.
+ * Also one user will have extactly one unique UserPurchase doc.
  * User and UserPurchase have one-to-one relation
  */
 

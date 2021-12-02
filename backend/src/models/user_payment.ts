@@ -5,8 +5,7 @@ import { UserDocument } from "./user";
  * Model Purpose
  *
  * User's all payment information will be in UserPayment doc.
- * Also one user will have extactly one unique UserPayment doc which will be created
- * with the creation of that user.
+ * Also one user will have extactly one unique UserPayment doc.
  * User and UserPayment have one-to-one relation
  */
 
